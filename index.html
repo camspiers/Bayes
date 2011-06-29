@@ -51,6 +51,7 @@
         <div class="form_actions clearfix">
           <input type="submit" value="Calculate"/>
           <button class="add_hypothesis">Add Hypothsis</button>
+          <button class="a_fortiori">A fortiori</button>
         </div>
       </form>
 		</div>
@@ -106,24 +107,49 @@
   </script>-->
 
   <script type="text/template" id="hypothesis">
-    <fieldset class="hypothesis">
+    <fieldset class="hypothesis<%= a_fortiori ? ' fortiori' : '' %>">
       <legend>Hypothesis <%= num %></legend>
+      <% _.each(fields, function (field) { %>
       <div class="clearfix field">
-        <label for="Abbreviated_HB_<%= num %>">P(h<%= num %>|b)</label>
+        <label for="Abbreviated_HB_<%= num %>"><%= _.template(field.label)({num: num}) %></label>
+        <% if (a_fortiori) { %>
         <div class="inputs">
-          <input type="range" name="proxy_hb_<%= num %>" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
-          <input type="number" name="hb_<%= num %>" id="Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="range" name="proxy_<%= field.name %>_<%= num %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="hb_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+        </div>
+        <div class="inputs">
+          <input type="range" name="proxy_hb_<%= field.name %>[]" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="hb_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+        </div>
+        <% } else { %>
+        <div class="inputs">
+          <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+        </div>
+        <% } %>
+      </div>
+      <% }); %>
+<!--      <div class="clearfix field">
+        <label for="Abbreviated_NHB_<%= num %>">P(~H<%= num %>|B)</label>
+        <div class="inputs">
+          <input type="range" name="proxy_nhb_<%= num %>" id="Proxy_Abbreviated_NHB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="nhb_<%= num %>" id="Abbreviated_NHB_<%= num %>" min="0" max="1" step="0.1"/>
         </div>
       </div>
       <div class="clearfix field">
-        <label for="Abbreviated_NHB_<%= num %>">P(~h<%= num %>|b)</label><input type="number" name="nhb_<%= num %>" id="Abbreviated_NHB_<%= num %>" min="0" max="1" step="0.1"/>
+        <label for="Abbreviated_EHB_<%= num %>">P(E|H<%= num %>.B)</label>
+        <div class="inputs">
+          <input type="range" name="proxy_ehb_<%= num %>" id="Proxy_Abbreviated_EHB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="ehb_<%= num %>" id="Abbreviated_EHB_<%= num %>" min="0" max="1" step="0.1"/>
+        </div>
       </div>
       <div class="clearfix field">
-        <label for="Abbreviated_EHB_<%= num %>">P(e|h<%= num %>.b)</label><input type="number" name="ehb_<%= num %>" id="Abbreviated_EHB_<%= num %>" min="0" max="1" step="0.1"/>
-      </div>
-      <div class="clearfix field">
-        <label for="Abbreviated_EB_<%= num %>">P(e|b)</label><input type="number" name="eb_<%= num %>" id="Abbreviated_EB_<%= num %>" min="0" max="1" step="0.1"/>
-      </div>
+        <label for="Abbreviated_EB_<%= num %>">P(E|B)</label>
+        <div class="inputs">
+          <input type="range" name="proxy_eb_<%= num %>" id="Proxy_Abbreviated_EB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="eb_<%= num %>" id="Abbreviated_EB_<%= num %>" min="0" max="1" step="0.1"/>
+        </div>
+      </div>-->
     </fieldset>
   </script>
 

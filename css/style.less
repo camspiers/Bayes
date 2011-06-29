@@ -165,21 +165,28 @@ form{
       float: left;
       width: 100px;
       height: 60px;
-      line-height: 60px;
+      line-height: 30px;
     }
     input{
-      float: left;
       height: 30px;
       width: 100px;
-      &.fortiori{
-        width: 100px;
-      }
+      margin-right: 10px;
     }
 
   }
   .hypothesis{
     float: left;
     margin-right: 20px;
+    &.fortiori{
+      .inputs{
+        float: left;
+        width: 60px;
+        input{
+          width: 50px;
+          margin-right: 10px;
+        }
+      }
+    }
   }
   button, input[type="submit"]{
     padding: 0;

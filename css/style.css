@@ -56,9 +56,9 @@ h2{font-size:20px;margin-bottom:10px;}
 .equation .top,.equation .bottom{line-height:24px;}
 footer{text-align:right;}
 form legend{font-weight:bold;font-size:16px;line-height:40px;}
-form .field{margin-bottom:10px;}form .field label{float:left;width:100px;height:60px;line-height:60px;}
-form .field input{float:left;height:30px;width:100px;}form .field input.fortiori{width:100px;}
-form .hypothesis{float:left;margin-right:20px;}
+form .field{margin-bottom:10px;}form .field label{float:left;width:100px;height:60px;line-height:30px;}
+form .field input{height:30px;width:100px;margin-right:10px;}
+form .hypothesis{float:left;margin-right:20px;}form .hypothesis.fortiori .inputs{float:left;width:60px;}form .hypothesis.fortiori .inputs input{width:50px;margin-right:10px;}
 form button,form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;}
 .ir{display:block;text-indent:-999em;overflow:hidden;background-repeat:no-repeat;text-align:left;direction:ltr;}
 .hidden{display:none;visibility:hidden;}
