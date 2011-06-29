@@ -47,21 +47,11 @@
 				</div>
 			</div>
       <form action="#">
-        <fieldset>
-          <div class="clearfix field">
-            <label>P(h|b)</label><input type="number" name="hb" placeholder="e.g. 0.6" min="0" max="1" step="0.1"/>
-          </div>
-          <div class="clearfix field">
-            <label>P(~h|b)</label><input type="text" name="nhb"/>
-          </div>
-          <div class="clearfix field">
-            <label>P(e|h.b)</label><input type="text" name="ehb"/>
-          </div>
-          <div class="clearfix field">
-            <label>P(e|b)</label><input type="text" name="eb"/>
-          </div>
+        <div class="hypotheses clearfix"></div>
+        <div class="form_actions clearfix">
           <input type="submit" value="Calculate"/>
-        </fieldset>
+          <button class="add_hypothesis">Add Hypothsis</button>
+        </div>
       </form>
 		</div>
 		<div class="panel">
@@ -91,10 +81,11 @@
     </footer>
   </div> 
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.5.1.min.js">\x3C/script>')</script>
 
   <!-- scripts concatenated and minified via ant build script-->
+  <script src="js/libs/jquery.validate.min.js"></script>
   <script src="js/libs/underscore.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/mylibs/bayes.js"></script>
@@ -107,21 +98,34 @@
   <![endif]-->
 
 
-  <script>
+<!--  <script>
     var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']]; // Change UA-XXXXX-X to be your site's ID
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g,s)}(document,'script'));
-  </script>
-
-<!--  <script type="text/template" id="hypothesis">
-	  <div class="hypothesis">
-		Hypothesis
-    <form action="#">
-      <fieldset><input type="text" name="name" id="Name" /><label for=""></label></fieldset>
-    </form>
-	  </div>
   </script>-->
+
+  <script type="text/template" id="hypothesis">
+    <fieldset class="hypothesis">
+      <legend>Hypothesis <%= num %></legend>
+      <div class="clearfix field">
+        <label for="Abbreviated_HB_<%= num %>">P(h<%= num %>|b)</label>
+        <div class="inputs">
+          <input type="range" name="proxy_hb_<%= num %>" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="hb_<%= num %>" id="Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+        </div>
+      </div>
+      <div class="clearfix field">
+        <label for="Abbreviated_NHB_<%= num %>">P(~h<%= num %>|b)</label><input type="number" name="nhb_<%= num %>" id="Abbreviated_NHB_<%= num %>" min="0" max="1" step="0.1"/>
+      </div>
+      <div class="clearfix field">
+        <label for="Abbreviated_EHB_<%= num %>">P(e|h<%= num %>.b)</label><input type="number" name="ehb_<%= num %>" id="Abbreviated_EHB_<%= num %>" min="0" max="1" step="0.1"/>
+      </div>
+      <div class="clearfix field">
+        <label for="Abbreviated_EB_<%= num %>">P(e|b)</label><input type="number" name="eb_<%= num %>" id="Abbreviated_EB_<%= num %>" min="0" max="1" step="0.1"/>
+      </div>
+    </fieldset>
+  </script>
 
 </body>
 </html>

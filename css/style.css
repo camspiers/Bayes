@@ -46,7 +46,7 @@ a:hover{color:#036;}
 h1{font-size:30px;margin-bottom:10px;}
 h2{font-size:20px;margin-bottom:10px;}
 #main{margin-top:50px;}
-#container{width:600px;margin:0 auto;}
+#container{width:900px;margin:0 auto;}
 #tabs a{display:block;width:49%;line-height:40px;float:left;border:1px solid #000;text-align:center;}
 #panels .panel{display:none;padding-top:10px;}
 #panels .active{display:block;}
@@ -55,8 +55,11 @@ h2{font-size:20px;margin-bottom:10px;}
 .equation .divide{height:2px;background-color:#000;}
 .equation .top,.equation .bottom{line-height:24px;}
 footer{text-align:right;}
-form .field{margin-bottom:10px;}form .field label{float:left;width:100px;height:30px;line-height:30px;}
+form legend{font-weight:bold;font-size:16px;line-height:40px;}
+form .field{margin-bottom:10px;}form .field label{float:left;width:100px;height:60px;line-height:60px;}
 form .field input{float:left;height:30px;width:100px;}form .field input.fortiori{width:100px;}
+form .hypothesis{float:left;margin-right:20px;}
+form button,form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;}
 .ir{display:block;text-indent:-999em;overflow:hidden;background-repeat:no-repeat;text-align:left;direction:ltr;}
 .hidden{display:none;visibility:hidden;}
 .visuallyhidden{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;}
