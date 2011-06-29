@@ -1,0 +1,127 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Bayesian Reasoning</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <script src="js/libs/modernizr-1.7.min.js"></script>
+
+</head>
+
+<body>
+
+  <div id="container">
+    <header>
+
+    </header>
+    <div id="main" role="main">
+	<h1>Bayesian Calculator</h1>
+
+	<div id="tabs" class="clearfix">
+		<a href="#">Abbreviated</a>
+		<a href="#">Complete</a>
+	</div>
+	<div id="panels">
+		<div class="panel active">
+			<h2>Abbreviated</h2>
+			<div class="equation clearfix">
+				<div class="left">P(h|e.b)</div>
+				<div class="equals">=</div>
+				<div class="right">
+					<div class="top">
+						P(h|b) x P(e|h.b)
+					</div>
+					<div class="divide"></div>
+					<div class="bottom">P(e|b)</div>
+				</div>
+			</div>
+      <form action="#">
+        <fieldset>
+          <div class="clearfix field">
+            <label>P(h|b)</label><input type="number" name="hb" placeholder="e.g. 0.6" min="0" max="1" step="0.1"/>
+          </div>
+          <div class="clearfix field">
+            <label>P(~h|b)</label><input type="text" name="nhb"/>
+          </div>
+          <div class="clearfix field">
+            <label>P(e|h.b)</label><input type="text" name="ehb"/>
+          </div>
+          <div class="clearfix field">
+            <label>P(e|b)</label><input type="text" name="eb"/>
+          </div>
+          <input type="submit" value="Calculate"/>
+        </fieldset>
+      </form>
+		</div>
+		<div class="panel">
+			<h2>Complete</h2>
+			<div class="equation clearfix">
+				<div class="left">P(h|e.b)</div>
+				<div class="equals">=</div>
+				<div class="right">
+					<div class="top">
+						P(h|b) x P(e|h.b)
+					</div>
+					<div class="divide"></div>
+					<div class="bottom">[ P(h|b) x P(e|h.b) ] + [ P(~h|b) x P(e|~h.b) ]</div>
+				</div>
+			</div>
+      <div class="">
+        <label>P(h|b)</label><input type="text" name="hb"/><br/>
+        <label>P(e|h.b)</label><input type="text" name="ehb"/><br/>
+        <label>P(e|b)</label><input type="text" name="eb"/><br/>
+        <input type="submit" value="Calculate"/>
+      </div>
+		</div>
+	</div>
+    </div>
+    <footer>
+	Created by Cam Spiers
+    </footer>
+  </div> 
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.5.1.min.js">\x3C/script>')</script>
+
+  <!-- scripts concatenated and minified via ant build script-->
+  <script src="js/libs/underscore.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/mylibs/bayes.js"></script>
+  <script src="js/script.js"></script>
+  <!-- end scripts-->
+
+  <!--[if lt IE 7 ]>
+    <script src="js/libs/dd_belatedpng.js"></script>
+    <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+  <![endif]-->
+
+
+  <script>
+    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']]; // Change UA-XXXXX-X to be your site's ID
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+
+<!--  <script type="text/template" id="hypothesis">
+	  <div class="hypothesis">
+		Hypothesis
+    <form action="#">
+      <fieldset><input type="text" name="name" id="Name" /><label for=""></label></fieldset>
+    </form>
+	  </div>
+  </script>-->
+
+</body>
+</html>
