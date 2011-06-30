@@ -43,23 +43,29 @@ body,select,input,textarea{color:#444;}
 h1,h2,h3,h4,h5,h6{font-weight:bold;}
 a,a:active,a:visited{color:#607890;}
 a:hover{color:#036;}
+body,html{font-family:Georgia,"Times New Roman",Times,serif;}
 h1{font-size:30px;margin-bottom:10px;}
 h2{font-size:20px;margin-bottom:10px;}
 #main{margin-top:50px;}
 #container{width:900px;margin:0 auto;}
-#tabs a{display:block;width:49%;line-height:40px;float:left;border:1px solid #000;text-align:center;}
+#tabs a{display:block;width:48%;margin-right:1%;line-height:40px;float:left;border:1px solid #000;text-align:center;text-decoration:none;color:#000;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}#tabs a:hover{background-color:#FF5E99;color:#fff;}
 #panels .panel{display:none;padding-top:10px;}
 #panels .active{display:block;}
-.equation{font-weight:bold;font-family:monospace;font-size:15px;padding:15px 0;}
+.equation{font-family:monospace;font-size:15px;padding:15px 0;}
 .equation .left,.equation .right,.equation .equals{float:left;height:50px;margin:0 10px 0 0;text-align:center;line-height:50px;}
 .equation .divide{height:2px;background-color:#000;}
 .equation .top,.equation .bottom{line-height:24px;}
 footer{text-align:right;}
+.hide{display:none;}
 form legend{font-weight:bold;font-size:16px;line-height:40px;}
-form .field{margin-bottom:10px;}form .field label{float:left;width:100px;height:60px;line-height:30px;}
-form .field input{height:30px;width:100px;margin-right:10px;}
-form .hypothesis{float:left;margin-right:20px;}form .hypothesis.fortiori .inputs{float:left;width:60px;}form .hypothesis.fortiori .inputs input{width:50px;margin-right:10px;}
-form button,form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;}
+form .field{margin-bottom:10px;}form .field label{float:left;width:100px;line-height:20px;}
+form .field input[type=number]{height:30px;width:120px;}
+form .field input[type=range]{width:120px;margin-bottom:5px;}
+form .hypothesis{float:left;margin-right:20px;}form .hypothesis .inputs{float:left;margin-right:10px;width:120px;}
+form .hypothesis.fortiori .inputs{float:left;width:55px;}form .hypothesis.fortiori .inputs input{width:55px;}
+form .form_actions{margin-top:20px;}
+form button,form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}form button:hover,form input[type="submit"]:hover{background-color:#FF5E99;}
+form button.remove,form input[type="submit"].remove{float:right;margin:0;}
 .ir{display:block;text-indent:-999em;overflow:hidden;background-repeat:no-repeat;text-align:left;direction:ltr;}
 .hidden{display:none;visibility:hidden;}
 .visuallyhidden{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;}

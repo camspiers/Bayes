@@ -5,6 +5,7 @@
 		var hypothesisTemplate = _.template($('#hypothesis').html());
     var template_options = {
       a_fortiori: false,
+      hide_remove: false,
       fields: [
         {
           name: 'hb',
@@ -33,6 +34,7 @@
 		$('.add_hypothesis').click(function (e) {
 			e.preventDefault();
       var $hypotheses_container = $(this).closest('form').find('.hypotheses');
+      $hypotheses_container.find('.remove').hide();
 			$hypotheses_container.append(hypothesisTemplate($.extend(template_options, {num: $hypotheses_container.find('.hypothesis').length + 1})));
 		}).click();
     
@@ -50,10 +52,18 @@
 			e.preventDefault();
       template_options.a_fortiori = !template_options.a_fortiori;
       var $hypotheses_container = $(this).closest('form').find('.hypotheses');
-      $hypotheses_container.find('.hypothesis').each(function (index) {
-        $(this).replaceWith(hypothesisTemplate($.extend(template_options, {num: index + 1})));
+      var $hypotheses = $hypotheses_container.find('.hypothesis');
+      $hypotheses.each(function (index) {
+        $(this).replaceWith(hypothesisTemplate($.extend(template_options, {num: index + 1, hide_remove: (index + 1) !== $hypotheses.length})));
       });
 		});
+    
+    $('form').delegate('.remove', 'click', function () {
+      var $this = $(this);
+      var $form = $this.closest('form');
+      $this.closest('.hypothesis').remove();
+      $form.find('.remove:last').show();
+    });
 
 	});
 

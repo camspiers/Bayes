@@ -1,3 +1,5 @@
+@import "css3.less";
+
 /*  HTML5 ✰ Boilerplate  */
 
 html, body, div, span, object, iframe,
@@ -83,7 +85,7 @@ a:hover { color: #036; }
  */
 
 body, html{
-	
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 h1{
@@ -107,11 +109,19 @@ h2{
 
 #tabs a{
 	display: block;
-	width: 49%;
+	width: 48%;
+	margin-right: 1%;
 	line-height: 40px;
 	float: left;
 	border: 1px solid #000;
 	text-align: center;
+  text-decoration: none;
+  color: #000;
+  .css3_border_radius(4px);
+  &:hover{
+    background-color: #FF5E99;
+    color: #fff;
+  }
 }
 
 #panels .panel{
@@ -124,7 +134,6 @@ h2{
 }
 
 .equation{
-	font-weight: bold;
 	font-family: monospace;
 	font-size: 15px;
 	padding: 15px 0;
@@ -151,7 +160,9 @@ footer{
 	text-align: right;
 }
 
-
+.hide{
+  display: none;
+}
 
 form{
   legend{
@@ -164,29 +175,38 @@ form{
     label{
       float: left;
       width: 100px;
-      height: 60px;
-      line-height: 30px;
+      line-height: 20px;
     }
-    input{
+    input[type=number]{
       height: 30px;
-      width: 100px;
-      margin-right: 10px;
+      width: 120px;
+    }
+    input[type=range]{
+      width: 120px;
+      margin-bottom: 5px;
     }
 
   }
   .hypothesis{
     float: left;
     margin-right: 20px;
+    .inputs{
+        float: left;
+        margin-right: 10px;
+        width: 120px;
+    }
     &.fortiori{
       .inputs{
         float: left;
-        width: 60px;
+        width: 55px;
         input{
-          width: 50px;
-          margin-right: 10px;
+          width: 55px;
         }
       }
     }
+  }
+  .form_actions{
+    margin-top: 20px;
   }
   button, input[type="submit"]{
     padding: 0;
@@ -198,6 +218,14 @@ form{
     margin-right: 10px;
     padding: 0 5px;
     float: left;
+    .css3_border_radius(5px);
+    &:hover{
+      background-color: #FF5E99;
+    }
+    &.remove{
+      float: right;
+      margin: 0;
+    }
   }
 }
 
