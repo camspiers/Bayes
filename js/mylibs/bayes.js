@@ -1,4 +1,5 @@
 var bayes = {
+  //
 	calc: {
 		prior: function (calc) {
 			//figure out prior

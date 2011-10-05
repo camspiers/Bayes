@@ -9,19 +9,19 @@
       fields: [
         {
           name: 'hb',
-          label: 'P(H<%= num %>|B)'
+          label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)'
         },
         {
           name: 'nhb',
-          label: 'P(~H<%= num %>|B)'
+          label: '\\(\\mathrm{\\Pr( \\bar{H}_<%= num %> \\mid b )}\\)'
         },
         {
           name: 'ehb',
-          label: 'P(E|H<%= num %>.B)'
+          label: '\\(\\mathrm{\\Pr( E \\mid H_{<%= num %>}b )}\\)'
         },
         {
           name: 'eb',
-          label: 'P(E|B)'
+          label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)'
         }
       ]
     };
@@ -36,6 +36,7 @@
       var $hypotheses_container = $(this).closest('form').find('.hypotheses');
       $hypotheses_container.find('.remove').hide();
 			$hypotheses_container.append(hypothesisTemplate($.extend(template_options, {num: $hypotheses_container.find('.hypothesis').length + 1})));
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
 		}).click();
     
     $('form').delegate('input[type=range]', 'change', function () {
@@ -56,6 +57,7 @@
       $hypotheses.each(function (index) {
         $(this).replaceWith(hypothesisTemplate($.extend(template_options, {num: index + 1, hide_remove: (index + 1) !== $hypotheses.length})));
       });
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
 		});
     
     $('form').delegate('.remove', 'click', function () {

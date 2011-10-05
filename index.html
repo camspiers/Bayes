@@ -35,16 +35,8 @@
 	<div id="panels">
 		<div class="panel active">
 			<h2>Abbreviated</h2>
-			<div class="equation clearfix">
-				<div class="left">P(H|E.B)</div>
-				<div class="equals">=</div>
-				<div class="right">
-					<div class="top">
-						P(H|B) x P(E|H.B)
-					</div>
-					<div class="divide"></div>
-					<div class="bottom">P(E|B)</div>
-				</div>
+			<div class="equation">
+        $$\mathrm{\Pr( H \mid Eb ) = \frac{\Pr( H \mid b ) \Pr( E \mid Hb )}{\Pr( E \mid b )}}$$
 			</div>
       <form action="#">
         <div class="hypotheses clearfix"></div>
@@ -57,21 +49,13 @@
 		</div>
 		<div class="panel">
 			<h2>Complete</h2>
-			<div class="equation clearfix">
-				<div class="left">P(h|e.b)</div>
-				<div class="equals">=</div>
-				<div class="right">
-					<div class="top">
-						P(h|b) x P(e|h.b)
-					</div>
-					<div class="divide"></div>
-					<div class="bottom">[ P(h|b) x P(e|h.b) ] + [ P(~h|b) x P(e|~h.b) ]</div>
-				</div>
+			<div class="equation">
+        $$\mathrm{\Pr( H \mid Eb ) = \frac{\Pr( H \mid b ) \Pr( E \mid Hb )}{\Pr( H \mid b ) \Pr( E \mid Hb) + \Pr(\bar{H} \mid b ) \Pr( E \mid \bar{H} b )}}$$
 			</div>
       <div class="">
-        <label>P(h|b)</label><input type="text" name="hb"/><br/>
-        <label>P(e|h.b)</label><input type="text" name="ehb"/><br/>
-        <label>P(e|b)</label><input type="text" name="eb"/><br/>
+        <label>\(\mathrm{\Pr( H \mid b )} \)</label><input type="text" name="hb"/><br/>
+        <label>\(\mathrm{\Pr( E \mid Hb )} \)</label><input type="text" name="ehb"/><br/>
+        <label>\(\mathrm{\Pr( E \mid b )} \)</label><input type="text" name="eb"/><br/>
         <input type="submit" value="Calculate"/>
       </div>
 		</div>
@@ -89,6 +73,7 @@
   <script src="js/libs/jquery.validate.min.js"></script>
   <script src="js/libs/underscore.js"></script>
   <script src="js/plugins.js"></script>
+  <script src="js/libs/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   <script src="js/mylibs/bayes.js"></script>
   <script src="js/script.js"></script>
   <!-- end scripts-->
