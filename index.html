@@ -36,7 +36,21 @@
 		<div class="panel active">
 			<h2>Abbreviated</h2>
 			<div class="equation">
-        $$\mathrm{\Pr( H \mid Eb ) = \frac{\Pr( H \mid b ) \Pr( E \mid Hb )}{\Pr( E \mid b )}}$$
+        $$\mathrm{\Pr(H \mid E.b) = \frac{\Pr(H \mid b) \Pr(E \mid H.b)}{\Pr(E \mid b)}}$$
+			</div>
+      <form action="#">
+        <div class="basic hypotheses clearfix">
+        </div>
+        <div class="form_actions clearfix">
+          <input type="submit" value="Calculate"/>
+          <button class="a_fortiori">A fortiori</button>
+        </div>
+      </form>
+		</div>
+		<div class="panel">
+			<h2>Complete</h2>
+			<div class="equation">
+        $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\bar{H} \mid b ) \Pr( E \mid \bar{H} b )}}$$
 			</div>
       <form action="#">
         <div class="hypotheses clearfix"></div>
@@ -46,18 +60,6 @@
           <button class="a_fortiori">A fortiori</button>
         </div>
       </form>
-		</div>
-		<div class="panel">
-			<h2>Complete</h2>
-			<div class="equation">
-        $$\mathrm{\Pr( H \mid Eb ) = \frac{\Pr( H \mid b ) \Pr( E \mid Hb )}{\Pr( H \mid b ) \Pr( E \mid Hb) + \Pr(\bar{H} \mid b ) \Pr( E \mid \bar{H} b )}}$$
-			</div>
-      <div class="">
-        <label>\(\mathrm{\Pr( H \mid b )} \)</label><input type="text" name="hb"/><br/>
-        <label>\(\mathrm{\Pr( E \mid Hb )} \)</label><input type="text" name="ehb"/><br/>
-        <label>\(\mathrm{\Pr( E \mid b )} \)</label><input type="text" name="eb"/><br/>
-        <input type="submit" value="Calculate"/>
-      </div>
 		</div>
 	</div>
     </div>
@@ -93,28 +95,30 @@
 
   <script type="text/template" id="hypothesis">
     <fieldset class="hypothesis<%= a_fortiori ? ' fortiori' : '' %>">
-      <legend>Hypothesis <%= num %></legend>
+      <legend>Hypothesis <% if (!single) { %><%= num %><% } %></legend>
       <% _.each(fields, function (field) { %>
-      <div class="clearfix field">
-        <label for="Abbreviated_HB_<%= num %>"><%= _.template(field.label)({num: num}) %></label>
+      <div class="clearfix field field-<%= field.name %>">
+        <label for="Abbreviated_H.b_<%= num %>"><%= _.template(field.label)({num: num, single: single}) %></label>
         <% if (a_fortiori) { %>
         <div class="inputs">
           <input type="range" name="proxy_<%= field.name %>_<%= num %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0" />
-          <input type="number" name="hb_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0" />
+          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0" />
         </div>
         <div class="inputs">
-          <input type="range" name="proxy_hb_<%= field.name %>[]" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
-          <input type="number" name="hb_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01"  value="0"/>
+          <input type="range" name="proxy_H.b_<%= field.name %>[]" id="Proxy_Abbreviated_H.b_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01"  value="0"/>
         </div>
         <% } else { %>
         <div class="inputs">
-          <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_HB_<%= num %>" min="0" max="1" step="0.01" value="0"/>
+          <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_H.b_<%= num %>" min="0" max="1" step="0.01" value="0"/>
           <input type="number" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0"/>
         </div>
         <% } %>
       </div>
       <% }); %>
+      <% if (num != 1) { %>
       <button class="remove<%= hide_remove ? ' hide' : '' %>">Remove hypothesis</button>
+      <% } %>
     </fieldset>
   </script>
 

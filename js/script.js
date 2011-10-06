@@ -9,19 +9,23 @@
       fields: [
         {
           name: 'hb',
-          label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)'
+          label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
+          className: 'hb'
         },
         {
           name: 'nhb',
-          label: '\\(\\mathrm{\\Pr( \\bar{H}_<%= num %> \\mid b )}\\)'
+          label: '\\(\\mathrm{\\Pr( \\bar{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
+          className: 'nhb'
         },
         {
           name: 'ehb',
-          label: '\\(\\mathrm{\\Pr( E \\mid H_{<%= num %>}b )}\\)'
+          label: '\\(\\mathrm{\\Pr( E \\mid H<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
+          className: ''
         },
         {
           name: 'eb',
-          label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)'
+          label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
+          className: ''
         }
       ]
     };
@@ -30,24 +34,18 @@
 			e.preventDefault();
 			$('#panels').find('.panel').removeClass('active').eq($('#tabs').find('a').index($(this))).addClass('active');
 		});
-
-		$('.add_hypothesis').click(function (e) {
-			e.preventDefault();
-      var $hypotheses_container = $(this).closest('form').find('.hypotheses');
+    
+    var add_hypothesis = function (e, $el) {
+			if (e) e.preventDefault();
+      var $hypotheses_container = ($el || $(this)).closest('form').find('.hypotheses');
       $hypotheses_container.find('.remove').hide();
-			$hypotheses_container.append(hypothesisTemplate($.extend(template_options, {num: $hypotheses_container.find('.hypothesis').length + 1})));
+			$hypotheses_container.append(hypothesisTemplate($.extend(template_options, {num: $hypotheses_container.find('.hypothesis').length + 1, single: $hypotheses_container.hasClass('basic')})));
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
-		}).click();
+		};
     
-    $('form').delegate('input[type=range]', 'change', function () {
-      var $this = $(this);
-      $this.siblings('input[type=number]').val($(this).val());
-    });
-    
-    $('form').delegate('input[type=number]', 'change', function () {
-      var $this = $(this);
-      $this.siblings('input[type=range]').val($(this).val());
-    });
+    add_hypothesis(false, $('.basic'));
+
+		$('.add_hypothesis').click(add_hypothesis).click();
 
 		$('.a_fortiori').click(function (e) {
 			e.preventDefault();
@@ -60,11 +58,44 @@
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
 		});
     
-    $('form').delegate('.remove', 'click', function () {
-      var $this = $(this);
-      var $form = $this.closest('form');
-      $this.closest('.hypothesis').remove();
-      $form.find('.remove:last').show();
+    var $form = $('form');
+    
+    $form.delegate('input[type=range]', 'change', function () {
+      var $this = $(this),
+      $field = $this.closest('.field'),
+      $fields = $field.siblings('.field');
+      $this.siblings('input[type=number]').val($(this).val());
+      if ($field.hasClass('field-hb')) {
+        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+      }
+      if ($field.hasClass('field-nhb')) {
+        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+      }
+    });
+    
+    $form.delegate('input[type=number]', 'change', function () {
+      var $this = $(this),
+      $field = $this.closest('.field'),
+      $fields = $field.siblings('.field');
+      $this.siblings('input[type=range]').val($(this).val());
+      if ($field.hasClass('field-hb')) {
+        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+      }
+      if ($field.hasClass('field-nhb')) {
+        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+      }
+    });
+    
+    $form.delegate('.remove', 'click', function (event) {
+      event.preventDefault();
+      var $this = $(this),
+      $form = $this.closest('form'),
+      $hypothesis = $this.closest('.hypothesis'),
+      $hypotheses = $hypothesis.siblings('.hypothesis');
+      if ($hypotheses.length > 0) {
+        $hypothesis.remove();
+        $form.find('.remove:last').show();
+      }
     });
 
 	});
