@@ -106,7 +106,12 @@
       }
     });
     
-    $("label[title]").tooltip();
+    $form.delegate('label[title]', 'mouseover', function () {
+      var $this = $(this);
+      if (!$this.data("tooltip")) {
+        $this.parent().find('label[title]:eq(0)').tooltip().trigger('mouseover');
+      }
+    });
 
 	});
 
