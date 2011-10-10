@@ -66,6 +66,7 @@ form .hypothesis.fortiori .inputs{float:left;width:55px;}form .hypothesis.fortio
 form .form_actions{margin-top:20px;}
 form button,form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}form button:hover,form input[type="submit"]:hover{background-color:#FF5E99;}
 form button.remove,form input[type="submit"].remove{float:right;margin:0;}
+.tooltip{background-color:#fff;padding:10px;border:1px solid #444;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}
 .ir{display:block;text-indent:-999em;overflow:hidden;background-repeat:no-repeat;text-align:left;direction:ltr;}
 .hidden{display:none;visibility:hidden;}
 .visuallyhidden{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;}

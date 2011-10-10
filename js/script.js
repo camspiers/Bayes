@@ -11,25 +11,29 @@
           name: 'hb',
           label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
           className: 'hb',
-          val: 0
+          val: 0,
+          title: 'Probability of the hypothesis given the background evidence'
         },
         {
           name: 'nhb',
           label: '\\(\\mathrm{\\Pr( \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
           className: 'nhb',
-          val: 1
+          val: 1,
+          title: 'Probability of not the hypothesis given the background evidence'
         },
         {
           name: 'ehb',
           label: '\\(\\mathrm{\\Pr( E \\mid H<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
           className: '',
-          val: 0
+          val: 0,
+          title: 'Probability of the evidence given the hypothesis and the background evidence'
         },
         {
           name: 'eb',
           label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
           className: '',
-          val: 0
+          val: 0,
+          title: 'Probability of the evidence given background evidence'
         }
       ]
     };
@@ -101,6 +105,8 @@
         $form.find('.remove:last').show();
       }
     });
+    
+    $("label[title]").tooltip();
 
 	});
 
