@@ -10,22 +10,26 @@
         {
           name: 'hb',
           label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
-          className: 'hb'
+          className: 'hb',
+          val: 0
         },
         {
           name: 'nhb',
-          label: '\\(\\mathrm{\\Pr( \\bar{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
-          className: 'nhb'
+          label: '\\(\\mathrm{\\Pr( \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
+          className: 'nhb',
+          val: 1
         },
         {
           name: 'ehb',
           label: '\\(\\mathrm{\\Pr( E \\mid H<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
-          className: ''
+          className: '',
+          val: 0
         },
         {
           name: 'eb',
           label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
-          className: ''
+          className: '',
+          val: 0
         }
       ]
     };
