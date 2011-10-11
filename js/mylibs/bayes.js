@@ -13,7 +13,11 @@ var bayes = {
 		},
 		posterior: function (calc) {
 			//figure out posterior
-			var hypotheses = calc.length;
+      if (calc.length == 1) {
+        return parseFloat(calc[0].eb) != 0 ? (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / parseFloat(calc[0].eb) : 0;
+      } else {
+        return false;
+      }
 			
 		}
 	},

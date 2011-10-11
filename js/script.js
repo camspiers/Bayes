@@ -1,6 +1,10 @@
-(function ($) {
+(function ($, bayes) {
 
 	$(function () {
+    
+    var round = function (num, dec) {
+       return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+    };
 
 		var hypothesisTemplate = _.template($('#hypothesis').html());
     
@@ -65,6 +69,12 @@
 		};
     
     add_hypothesis(false, $('.basic'));
+    
+    var updateCalculation = function (e, $this) {
+      if (e) e.preventDefault();
+      $this = !$this ? $(this) : $this;
+      $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([$this.serializeObject()]), 2));  
+    };
 
 		$('.add_hypothesis').click(add_hypothesis).click();
 
@@ -92,6 +102,7 @@
       if ($field.hasClass('field-nhb')) {
         $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
+      updateCalculation(false, $this.closest('form'));
     });
     
     $form.delegate('input[type=number]', 'change', function () {
@@ -105,6 +116,7 @@
       if ($field.hasClass('field-nhb')) {
         $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
+      updateCalculation(false, $this.closest('form'));
     });
     
     $form.delegate('.remove', 'click', function (event) {
@@ -126,13 +138,8 @@
       }
     });
     
-    $form.submit(function (e) {
-      if (e) e.preventDefault();
-      
-      console.log('calculate');
-      
-    });
+    $form.submit(updateCalculation);
 
 	});
 
-}(jQuery));
+}(jQuery, bayes));

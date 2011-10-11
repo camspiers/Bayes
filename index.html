@@ -64,6 +64,7 @@
 
     <script src="js/libs/jquery.validate.min.js"></script>
     <script src="js/libs/jquery.tools.min.js"></script>
+    <script src="js/libs/jquery.serializeobject.js"></script>
     <script src="js/libs/underscore.js"></script>
     <script src="js/plugins.js"></script>
     <script src="js/mylibs/bayes.js"></script>
@@ -97,11 +98,11 @@
           <% } else { %>
           <div class="inputs">
             <% if (!field.disabled) { %>
-            <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="number" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } else { %>
             <span><%= field.val %></span>
-            <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } %>
           </div>
           <% } %>
