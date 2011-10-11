@@ -49,7 +49,7 @@
           label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid E.b )}\\)',
           className: '',
           val: 0,
-          title: 'Probability of the hypothesis gicen the evidence and given the background evidence',
+          title: 'Probability of the hypothesis given the evidence and given the background evidence',
           disabled: true
         }
       ]
