@@ -50,7 +50,7 @@
 		<div class="panel">
 			<h2>Complete</h2>
 			<div class="equation">
-        $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H} b )}}$$
+        $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
 			</div>
       <form action="#">
         <div class="hypotheses clearfix"></div>
@@ -102,17 +102,32 @@
         <label for="Abbreviated_H.b_<%= num %>" title="<%= field.title %>"><%= _.template(field.label)({num: num, single: single}) %></label>
         <% if (a_fortiori) { %>
         <div class="inputs">
-          <input type="range" name="proxy_<%= field.name %>_<%= num %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0" />
-          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="0" />
+          <% if (!field.disabled) { %>
+          <input type="range" name="proxy_<%= field.name %>_<%= num %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } else { %>
+          <span><%= field.val %></span>
+          <input type="hidden" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } %>
         </div>
         <div class="inputs">
-          <input type="range" name="proxy_H.b_<%= field.name %>[]" id="Proxy_Abbreviated_H.b_<%= num %>" min="0" max="1" step="0.01" value="0"/>
-          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01"  value="0"/>
+          <% if (!field.disabled) { %>
+          <input type="range" name="proxy_H.b_<%= field.name %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } else { %>
+          <span><%= field.val %></span>
+          <input type="hidden" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } %>
         </div>
         <% } else { %>
         <div class="inputs">
-          <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_H.b_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% if (!field.disabled) { %>
+          <input type="range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
           <input type="number" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } else { %>
+          <span><%= field.val %></span>
+          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <% } %>
         </div>
         <% } %>
       </div>

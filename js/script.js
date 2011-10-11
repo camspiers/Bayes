@@ -3,6 +3,7 @@
 	$(function () {
 
 		var hypothesisTemplate = _.template($('#hypothesis').html());
+    
     var template_options = {
       a_fortiori: false,
       hide_remove: false,
@@ -12,28 +13,40 @@
           label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
           className: 'hb',
           val: 0,
-          title: 'Probability of the hypothesis given the background evidence'
+          title: 'Probability of the hypothesis given the background evidence',
+          disabled: false
         },
         {
           name: 'nhb',
           label: '\\(\\mathrm{\\Pr( \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
           className: 'nhb',
           val: 1,
-          title: 'Probability of not the hypothesis given the background evidence'
+          title: 'Probability of not the hypothesis given the background evidence',
+          disabled: false
         },
         {
           name: 'ehb',
           label: '\\(\\mathrm{\\Pr( E \\mid H<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
           className: '',
           val: 0,
-          title: 'Probability of the evidence given the hypothesis and the background evidence'
+          title: 'Probability of the evidence given the hypothesis and the background evidence',
+          disabled: false
         },
         {
           name: 'eb',
           label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
           className: '',
           val: 0,
-          title: 'Probability of the evidence given background evidence'
+          title: 'Probability of the evidence given the background evidence',
+          disabled: false
+        },
+        {
+          name: 'heb',
+          label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid E.b )}\\)',
+          className: '',
+          val: 0,
+          title: 'Probability of the hypothesis gicen the evidence and given the background evidence',
+          disabled: true
         }
       ]
     };
@@ -72,12 +85,12 @@
       var $this = $(this),
       $field = $this.closest('.field'),
       $fields = $field.siblings('.field');
-      $this.siblings('input[type=number]').val($(this).val());
+      $this.siblings('input[type=number]').val($this.val());
       if ($field.hasClass('field-hb')) {
-        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
       if ($field.hasClass('field-nhb')) {
-        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
     });
     
@@ -85,12 +98,12 @@
       var $this = $(this),
       $field = $this.closest('.field'),
       $fields = $field.siblings('.field');
-      $this.siblings('input[type=range]').val($(this).val());
+      $this.siblings('input[type=range]').val($this.val());
       if ($field.hasClass('field-hb')) {
-        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
       if ($field.hasClass('field-nhb')) {
-        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($(this).val()));
+        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
       }
     });
     
@@ -111,6 +124,13 @@
       if (!$this.data("tooltip")) {
         $this.parent().find('label[title]:eq(0)').tooltip().trigger('mouseover');
       }
+    });
+    
+    $form.submit(function (e) {
+      if (e) e.preventDefault();
+      
+      console.log('calculate');
+      
     });
 
 	});
