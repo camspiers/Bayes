@@ -32,7 +32,6 @@
               <div class="basic hypotheses clearfix">
               </div>
               <div class="form_actions clearfix">
-                <input type="submit" value="Calculate"/>
                 <button class="a_fortiori">A fortiori</button>
               </div>
             </form>
@@ -45,7 +44,6 @@
             <form action="#">
               <div class="hypotheses clearfix"></div>
               <div class="form_actions clearfix">
-                <input type="submit" value="Calculate"/>
                 <button class="add_hypothesis">Add hypothsis</button>
                 <button class="a_fortiori">A fortiori</button>
               </div>
@@ -62,7 +60,7 @@
     <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.4.min.js">\x3C/script>')</script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-    <script src="js/libs/jquery.validate.min.js"></script>
+<!--    <script src="js/libs/jquery.validate.min.js"></script>-->
     <script src="js/libs/jquery.tools.min.js"></script>
     <script src="js/libs/jquery.serializeobject.js"></script>
     <script src="js/libs/underscore.js"></script>
@@ -79,27 +77,27 @@
           <% if (a_fortiori) { %>
           <div class="inputs">
             <% if (!field.disabled) { %>
-            <input type="range" name="proxy_<%= field.name %>_<%= num %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="number" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } else { %>
             <span><%= field.val %></span>
-            <input type="hidden" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } %>
           </div>
           <div class="inputs">
             <% if (!field.disabled) { %>
-            <input type="range" name="proxy_H.b_<%= field.name %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="number" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } else { %>
             <span><%= field.val %></span>
-            <input type="hidden" name="H.b_<%= field.name %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>[]" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } %>
           </div>
           <% } else { %>
           <div class="inputs">
             <% if (!field.disabled) { %>
             <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+            <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
             <% } else { %>
             <span><%= field.val %></span>
             <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>

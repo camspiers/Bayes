@@ -42,6 +42,7 @@
           className: '',
           val: 0,
           title: 'Probability of the evidence given the background evidence',
+          hint: 'Must be greater than 0',
           disabled: false
         },
         {
@@ -70,9 +71,33 @@
     
     add_hypothesis(false, $('.basic'));
     
+    var validate = function ($form) {
+      var calc = $form.serializeObject(),
+      $inputs = $form.find('input'),
+      errors = [],
+      i;
+      
+      if ((calc['hb'] * calc['ehb']) / calc['eb'] > 1) {
+        errors.push('hb');
+        errors.push('nhb');
+        errors.push('ehb');
+        errors.push('eb');
+      }
+       
+      if (calc['eb'] <= 0) errors.push('eb');
+      
+      $inputs.filter('.error').removeClass('error');
+      if (errors.length > 0) {
+       for (i in errors) {
+         $inputs.filter('[name=' + errors[i] + ']').addClass('error');
+       } 
+      }
+    };
+    
     var updateCalculation = function (e, $this) {
       if (e) e.preventDefault();
       $this = !$this ? $(this) : $this;
+      validate($this);
       $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([$this.serializeObject()]), 2));  
     };
 
@@ -131,14 +156,12 @@
       }
     });
     
-    $form.delegate('label[title]', 'mouseover', function () {
+    $form.delegate('label[title],input[title]', 'mouseover', function () {
       var $this = $(this);
       if (!$this.data("tooltip")) {
-        $this.parent().find('label[title]:eq(0)').tooltip().trigger('mouseover');
+        $this.parent().find('label[title]:eq(0),input[title]:eq(0)').tooltip().trigger('mouseover');
       }
     });
-    
-    $form.submit(updateCalculation);
 
 	});
 
