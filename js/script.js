@@ -1,4 +1,4 @@
-(function ($, bayes) {
+(function ($, bayes, MathJax) {
 
 	$(function () {
     
@@ -66,7 +66,7 @@
       var $hypotheses_container = ($el || $(this)).closest('form').find('.hypotheses');
       $hypotheses_container.find('.remove').hide();
 			$hypotheses_container.append(hypothesisTemplate($.extend(template_options, {num: $hypotheses_container.find('.hypothesis').length + 1, single: $hypotheses_container.hasClass('basic')})));
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
+      if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
 		};
     
     add_hypothesis(false, $('.basic'));
@@ -98,7 +98,9 @@
       if (e) e.preventDefault();
       $this = !$this ? $(this) : $this;
       validate($this);
-      $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([$this.serializeObject()]), 2));  
+      var data = $this.serializeObject();
+      
+      $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([data]), 2));  
     };
 
 		$('.add_hypothesis').click(add_hypothesis).click();
@@ -106,42 +108,38 @@
 		$('.a_fortiori').click(function (e) {
 			e.preventDefault();
       template_options.a_fortiori = !template_options.a_fortiori;
-      var $hypotheses_container = $(this).closest('form').find('.hypotheses');
-      var $hypotheses = $hypotheses_container.find('.hypothesis');
+      var $hypotheses_container = $(this).closest('form').find('.hypotheses'),
+      $hypotheses = $hypotheses_container.find('.hypothesis')
       $hypotheses.each(function (index) {
-        $(this).replaceWith(hypothesisTemplate($.extend(template_options, {num: index + 1, hide_remove: (index + 1) !== $hypotheses.length})));
+        $(this).replaceWith(hypothesisTemplate($.extend(template_options, {num: index + 1, hide_remove: (index + 1) !== $hypotheses.length, single: $hypotheses_container.hasClass('basic')})));
       });
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
+      if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
 		});
     
     var $form = $('form');
     
-    $form.delegate('input[type=range]', 'change', function () {
-      var $this = $(this),
-      $field = $this.closest('.field'),
-      $fields = $field.siblings('.field');
-      $this.siblings('input[type=number]').val($this.val());
+    var updateJoinedFields = function ($this, type) {
+      var $field = $this.closest('.field'),
+      $fields = $field.siblings('.field'),
+      $inputs = $field.find('.inputs'),
+      $input = $this.closest('.inputs'),
+      i = $inputs.index($input);
+      $this.siblings('input[type=' + type + ']').val($this.val());
       if ($field.hasClass('field-hb')) {
-        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
+        $fields.filter('.field-nhb').find('.inputs:eq('+ i + ') input').val(1 - parseFloat($this.val()));
       }
       if ($field.hasClass('field-nhb')) {
-        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
+        $fields.filter('.field-hb').find('.inputs:eq('+ i + ') input').val(1 - parseFloat($this.val()));
       }
       updateCalculation(false, $this.closest('form'));
+    };
+    
+    $form.delegate('input[type=range]', 'change', function () {
+      updateJoinedFields($(this), 'number');
     });
     
     $form.delegate('input[type=number]', 'change', function () {
-      var $this = $(this),
-      $field = $this.closest('.field'),
-      $fields = $field.siblings('.field');
-      $this.siblings('input[type=range]').val($this.val());
-      if ($field.hasClass('field-hb')) {
-        $fields.filter('.field-nhb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
-      }
-      if ($field.hasClass('field-nhb')) {
-        $fields.filter('.field-hb').find('input[type=number],input[type=range]').val(1 - parseFloat($this.val()));
-      }
-      updateCalculation(false, $this.closest('form'));
+      updateJoinedFields($(this), 'range');
     });
     
     $form.delegate('.remove', 'click', function (event) {
@@ -156,13 +154,13 @@
       }
     });
     
-    $form.delegate('label[title],input[title]', 'mouseover', function () {
+    $form.delegate('label[title],input[title],button[title]', 'mouseover', function () {
       var $this = $(this);
       if (!$this.data("tooltip")) {
-        $this.parent().find('label[title]:eq(0),input[title]:eq(0)').tooltip().trigger('mouseover');
+        $this.tooltip().trigger('mouseover');
       }
     });
 
 	});
 
-}(jQuery, bayes));
+}(jQuery, bayes, MathJax));
