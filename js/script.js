@@ -72,19 +72,19 @@
     add_hypothesis(false, $('.basic'));
     
     var validate = function ($form) {
-      var calc = $form.serializeObject(),
+      var data = $form.serializeObject(),
       $inputs = $form.find('input'),
       errors = [],
       i;
       
-      if ((calc['hb'] * calc['ehb']) / calc['eb'] > 1) {
+      if ((data['hb'] * data['ehb']) / data['eb'] > 1) {
         errors.push('hb');
         errors.push('nhb');
         errors.push('ehb');
         errors.push('eb');
       }
        
-      if (calc['eb'] <= 0) errors.push('eb');
+      if (data['eb'] <= 0) errors.push('eb');
       
       $inputs.filter('.error').removeClass('error');
       if (errors.length > 0) {
@@ -94,13 +94,24 @@
       }
     };
     
-    var updateCalculation = function (e, $this) {
+    var updateCalculation = function (e, $this) {      
       if (e) e.preventDefault();
       $this = !$this ? $(this) : $this;
       validate($this);
       var data = $this.serializeObject();
-      
-      $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([data]), 2));  
+      if (_.isArray(data['eb'])) {        
+        for (var i = 0; i < data['eb'].length; i++) {
+          $this.find('.field-heb .inputs:eq(' + i + ') span').text(round(bayes.calc.posterior([{
+            eb: data['eb'][i],
+            ehb: data['ehb'][i],
+            hb: data['hb'][i],
+            heb: data['heb'][i],
+            nhb: data['nhb'][i]
+          }]), 2)); 
+        }        
+      } else {        
+        $this.find('.field-heb .inputs span').text(round(bayes.calc.posterior([data]), 2));        
+      }       
     };
 
 		$('.add_hypothesis').click(add_hypothesis).click();

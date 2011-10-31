@@ -43,7 +43,9 @@ body,select,input,textarea{color:#444;}
 h1,h2,h3,h4,h5,h6{font-weight:bold;}
 a,a:active,a:visited{color:#607890;}
 a:hover{color:#036;}
-body,html{font-family:Georgia,"Times New Roman",Times,serif;}
+body,html{font-family:'Quicksand',Georgia,"Times New Roman",Times,serif;}
+select,input,textarea,button{font-family:'Quicksand',Georgia,"Times New Roman",Times,serif;}
+pre,code,kbd,samp{font-family:'Quicksand',Georgia,"Times New Roman",Times,serif;}
 h1{font-size:30px;margin-bottom:10px;}
 h2{font-size:20px;margin-bottom:10px;}
 #main{margin-top:50px;}
