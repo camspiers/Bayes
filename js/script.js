@@ -73,24 +73,47 @@
 
         var validate = function($form) {
                 var data = $form.serializeObject(),
-                    $inputs = $form.find('input'),
                     errors = [],
-                    i;
-
-                if ((data['hb'] * data['ehb']) / data['eb'] > 1) {
-                    errors.push('hb');
-                    errors.push('nhb');
-                    errors.push('ehb');
-                    errors.push('eb');
-                }
-
-                if (data['eb'] <= 0) errors.push('eb');
-
-                $inputs.filter('.error').removeClass('error');
-                if (errors.length > 0) {
-                    for (i in errors) {
-                        $inputs.filter('[name=' + errors[i] + ']').addClass('error');
+                    $inputs = $form.find('input'),
+                    i,
+                    k,
+                    $input;
+    
+                $form.find('.error').removeClass('error');
+                    
+                if (_.isArray(data['eb'])) {
+                    for (i = 0; i < data['eb'].length; i++) {
+                        errors = [];
+                        
+                        if ((data['hb'][i] * data['ehb'][i]) / data['eb'][i] > 1) {
+                            errors.push('hb');
+                            errors.push('nhb');
+                            errors.push('ehb');
+                            errors.push('eb');
+                        }
+        
+                        if (data['eb'][i] <= 0) errors.push('eb');
+                        
+                        if (errors.length > 0) {
+                            for (k in errors) {
+                                $form.find('.field-' + errors[k] + ' .inputs:eq(' + i + ') input[name=' + errors[k] + ']').addClass('error');
+                            }
+                        }                        
                     }
+                } else {
+                    if ((data['hb'] * data['ehb']) / data['eb'] > 1) {
+                        errors.push('hb');
+                        errors.push('nhb');
+                        errors.push('ehb');
+                        errors.push('eb');
+                    }
+    
+                    if (data['eb'] <= 0) errors.push('eb');
+                    if (errors.length > 0) {
+                        for (i in errors) {
+                            $inputs.filter('[name=' + errors[i] + ']').addClass('error');
+                        }
+                    }                    
                 }
             };
 
