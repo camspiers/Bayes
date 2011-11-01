@@ -123,12 +123,16 @@ h2{
 }
 
 #panels .panel{
-	display: none;
+	display: block;
+    .css3_transition(opacity, 1s, ease-out);
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
 	padding-top: 10px;
 }
 
 #panels .active{
-	display: block;
+	opacity: 1; height: auto;
 }
 
 .equation{
