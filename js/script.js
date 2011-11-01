@@ -52,7 +52,10 @@
 
         $('#tabs').find('a').click(function(e) {
             e.preventDefault();
-            $('#panels').find('.panel').removeClass('active').eq($('#tabs').find('a').index($(this))).addClass('active');
+            var $this = $(this);
+            $('#tabs .active').removeClass('active');
+            $this.addClass('active');
+            $('#panels').find('.panel').removeClass('active').eq($('#tabs').find('a').index($this)).addClass('active');
         });
 
         var add_hypothesis = function(e, $el) {
@@ -170,7 +173,7 @@
         $form.delegate('label[title],input[title],button[title]', 'mouseover', function() {
             var $this = $(this);
             if (!$this.data("tooltip")) {
-                $this.tooltip().trigger('mouseover');
+                $this.tooltip({position: "center right"}).trigger('mouseover');
             }
         });
 

@@ -80,16 +80,11 @@ a:hover { color: #036; }
 
 /**
  * Primary styles
- *
- * Author: 
  */
 
-body, html{
+body, html, select, input, textarea, button, pre, code, kbd, samp{
   font-family: 'Quicksand', Georgia, "Times New Roman", Times, serif;
 }
-select, input, textarea, button { font-family: 'Quicksand', Georgia, "Times New Roman", Times, serif; }
-
-pre, code, kbd, samp { font-family: 'Quicksand', Georgia, "Times New Roman", Times, serif; }
 
 h1{
 	font-size: 30px;
@@ -121,7 +116,7 @@ h2{
   text-decoration: none;
   color: #000;
   .css3_border_radius(4px);
-  &:hover{
+  &:hover,&.active{
     background-color: #FF5E99;
     color: #fff;
   }
@@ -183,6 +178,7 @@ form{
     input[type=text]{
       height: 30px;
       width: 120px;
+      .css3_border_radius(5px);
     }
     .inputs span{
       font-size: 14px;
@@ -242,7 +238,7 @@ form{
 .tooltip{
   background-color: #fff;
   padding: 10px;
-  border: 1px solid #444;
+  border: 1px solid #FF5E99;
   .css3_border_radius(4px);
 }
 
