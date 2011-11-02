@@ -33,6 +33,13 @@
                 title: 'Probability of the evidence given the hypothesis and the background evidence',
                 disabled: false
             }, {
+                name: 'enhb',
+                label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
+                className: '',
+                val: 0,
+                title: 'Probability of the evidence given the hypothesis is false and the background evidence',
+                disabled: false
+            }, {
                 name: 'eb',
                 label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
                 className: '',
@@ -74,7 +81,6 @@
         var validate = function($form) {
                 var data = $form.serializeObject(),
                     errors = [],
-                    $inputs = $form.find('input'),
                     i,
                     k,
                     $input;
@@ -89,6 +95,7 @@
                             errors.push('hb');
                             errors.push('nhb');
                             errors.push('ehb');
+                            errors.push('enhb');
                             errors.push('eb');
                         }
         
@@ -101,10 +108,13 @@
                         }                        
                     }
                 } else {
+                    var $inputs = $form.find('input');
+                    
                     if ((data['hb'] * data['ehb']) / data['eb'] > 1) {
                         errors.push('hb');
                         errors.push('nhb');
                         errors.push('ehb');
+                        errors.push('enhb');
                         errors.push('eb');
                     }
     

@@ -14,7 +14,11 @@ var bayes = {
 		posterior: function (calc) {
 			//figure out posterior
       if (calc.length == 1) {
-        return parseFloat(calc[0].eb) != 0 ? (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / parseFloat(calc[0].eb) : 0;
+          if (calc[0].enhb > 0) {
+            return (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb) + parseFloat(calc[0].nhb) * parseFloat(calc[0].enhb)); 
+          } else {
+            return parseFloat(calc[0].eb) != 0 ? (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / parseFloat(calc[0].eb) : 0; 
+          }
       } else {
         return false;
       }

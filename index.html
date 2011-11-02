@@ -23,9 +23,10 @@
         <div id="tabs" class="clearfix">
           <a href="#" class="active">Abbreviated</a>
           <a href="#">Complete</a>
+          <a href="#">Complete with multiple hypotheses</a>
         </div>
         <div id="panels">
-          <div class="panel active">
+          <div class="panel abbreviated active">
             <h2>Abbreviated</h2>
             <div class="equation">
               $$\mathrm{\Pr(H \mid E.b) = \frac{\Pr(H \mid b) \Pr(E \mid H.b)}{\Pr(E \mid b)}}$$
@@ -38,8 +39,21 @@
               </div>
             </form>
           </div>
-          <div class="panel">
+          <div class="panel complete">
             <h2>Complete</h2>
+            <div class="equation">
+              $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
+            </div>
+            <form action="#">
+              <div class="basic hypotheses clearfix">
+              </div>
+              <div class="form_actions clearfix">
+                <button class="a_fortiori">A fortiori</button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <h2>Complete with multiple hypotheses</h2>
             <div class="equation">
               $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
             </div>
