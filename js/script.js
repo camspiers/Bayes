@@ -109,6 +109,7 @@
                     }
     
                     if (data['eb'] <= 0) errors.push('eb');
+                        
                     if (errors.length > 0) {
                         for (i in errors) {
                             $inputs.filter('[name=' + errors[i] + ']').addClass('error');
