@@ -32,6 +32,23 @@
               $$\mathrm{\Pr(H \mid E.b) = \frac{\Pr(H \mid b) \Pr(E \mid H.b)}{\Pr(E \mid b)}}$$
             </div>
             <form action="#">
+                <div class="labels">
+                    <fieldset>
+                        <legend>Labels</legend>
+                        <div class="field">
+                            <label for="hypothesis">Hypothesis</label>
+                            <div class="inputs">
+                                <input type="text" name="hypothesis" value="Hypothesis">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="evidence">Evidence</label>
+                            <div class="inputs">
+                                <input type="text" name="evidence" value="Evidence">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
               <div class="basic hypotheses clearfix">
               </div>
               <div class="form_actions clearfix">
@@ -45,6 +62,23 @@
               $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
             </div>
             <form action="#">
+                <div class="labels">
+                    <fieldset>
+                        <legend>Labels</legend>
+                        <div class="field">
+                            <label for="hypothesis">Hypothesis</label>
+                            <div class="inputs">
+                                <input type="text" name="hypothesis" value="Hypothesis">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="evidence">Evidence</label>
+                            <div class="inputs">
+                                <input type="text" name="evidence" value="Evidence">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
               <div class="basic hypotheses clearfix">
               </div>
               <div class="form_actions clearfix">
@@ -81,10 +115,10 @@
 
     <script type="text/template" id="hypothesis">
       <fieldset class="hypothesis<%= a_fortiori ? ' fortiori' : '' %>">
-        <legend>Hypothesis <% if (!single) { %><%= num %><% } %></legend>
+        <legend><%= labels.hypothesis %> <% if (!single) { %><%= num %><% } %></legend>
         <% _.each(fields, function (field) { %>
         <div class="clearfix field field-<%= field.name %>">
-          <label for="Abbreviated_H.b_<%= num %>" title="<%= field.title %>"><%= _.template(field.label)({num: num, single: single}) %></label>
+          <label for="Abbreviated_H.b_<%= num %>" title="<%= _.template(field.title)({labels: labels}) %>"><%= _.template(field.label)({num: num, single: single}) %></label>
           <% if (a_fortiori) { %>
           <div class="inputs">
             <% if (!field.disabled) { %>
