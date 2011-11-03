@@ -77,14 +77,14 @@
                 if (_.isArray(data['eb'])) {
                     for (i = 0; i < data['eb'].length; i++) {
                         errors = [];
-                        if ((data['hb'][i] * data['ehb'][i]) / data['eb'][i] > 1) {
+                        if (data['enhb'][i] == 0 && (data['hb'][i] * data['ehb'][i]) / data['eb'][i] > 1) {
                             errors.push('hb');
                             errors.push('nhb');
                             errors.push('ehb');
                             errors.push('enhb');
                             errors.push('eb');
                         }
-                        if (data['eb'][i] <= 0) errors.push('eb');
+                        if (data['enhb'][i] == 0 && data['eb'][i] <= 0) errors.push('eb');
                         if (errors.length > 0) {
                             for (k in errors) {
                                 $form.find('.field-' + errors[k] + ' .inputs:eq(' + i + ') input[name=' + errors[k] + ']').addClass('error');
@@ -94,14 +94,14 @@
                 }
                 else {
                     var $inputs = $form.find('input');
-                    if ((data['hb'] * data['ehb']) / data['eb'] > 1) {
+                    if (data['enhb'] == 0 && (data['hb'] * data['ehb']) / data['eb'] > 1) {
                         errors.push('hb');
                         errors.push('nhb');
                         errors.push('ehb');
                         errors.push('enhb');
                         errors.push('eb');
                     }
-                    if (data['eb'] <= 0) errors.push('eb');
+                    if (data['enhb'] == 0 && data['eb'] <= 0) errors.push('eb');
                     if (errors.length > 0) {
                         for (i in errors) {
                             $inputs.filter('[name=' + errors[i] + ']').addClass('error');
