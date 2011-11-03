@@ -207,10 +207,15 @@
                         }).trigger('mouseover');
                     }
                 });
-                $form.delegate('.labels input', 'keyup', function() {
-                    var $this = $(this);
-                    bayesapp.template_options.labels[$this.attr('name')] = $this.val();
-                    var $hypotheses_container = $(this).closest('form').find('.hypotheses');
+                $form.delegate('.set', 'click', function(e) {
+                    e.preventDefault();
+                    var $this = $(this),
+                    $inputs = $this.closest('fieldset').find('input');
+                    $inputs.each(function () {
+                        var $input = $(this);
+                        bayesapp.template_options.labels[$input.attr('name')] = $input.val();
+                    });
+                    var $hypotheses_container = $this.closest('form').find('.hypotheses');
                     $hypotheses_container.find('.hypothesis').remove();
                     bayesapp.add_hypothesis(false, $hypotheses_container);
                 });
