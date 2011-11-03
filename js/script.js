@@ -44,7 +44,7 @@
                     label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
                     className: '',
                     val: 0,
-                    title: 'Probability that <%= labels.evidence %> is true given the background evidence',
+                    title: 'Probability that \'<%= labels.evidence %>\' is true given the background evidence',
                     hint: 'Must be greater than 0',
                     disabled: false
                 }, {
