@@ -110,16 +110,11 @@
                 }
             },
             calculate: function(calc) {
-                if (calc.length == 1) {
-                    if (calc[0].enhb > 0) {
-                        return (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb) + parseFloat(calc[0].nhb) * parseFloat(calc[0].enhb));
-                    }
-                    else {
-                        return parseFloat(calc[0].eb) != 0 ? (parseFloat(calc[0].hb) * parseFloat(calc[0].ehb)) / parseFloat(calc[0].eb) : 0;
-                    }
+                if (calc.enhb > 0) {
+                    return (parseFloat(calc.hb) * parseFloat(calc.ehb)) / (parseFloat(calc.hb) * parseFloat(calc.ehb) + parseFloat(calc.nhb) * parseFloat(calc.enhb));
                 }
                 else {
-                    return false;
+                    return parseFloat(calc.eb) != 0 ? (parseFloat(calc.hb) * parseFloat(calc.ehb)) / parseFloat(calc.eb) : 0;
                 }
             },
             update_calculation: function(e, $this) {
@@ -127,19 +122,20 @@
                 $this = !$this ? $(this) : $this;
                 bayesapp.validate($this);
                 var data = $this.serializeObject();
-                if (_.isArray(data['eb'])) {
-                    for (var i = 0; i < data['eb'].length; i++) {
-                        $this.find('.field-heb .inputs:eq(' + i + ') span').text(bayesapp.round(bayesapp.calculate([{
+                if (_.isArray(data['hb'])) {
+                    for (var i = 0; i < data['hb'].length; i++) {
+                        $this.find('.field-heb .inputs:eq(' + i + ') span').text(bayesapp.round(bayesapp.calculate({
                             eb: data['eb'][i],
                             ehb: data['ehb'][i],
                             hb: data['hb'][i],
                             heb: data['heb'][i],
-                            nhb: data['nhb'][i]
-                        }]), 2));
+                            nhb: data['nhb'][i],
+                            enhb: data['enhb'][i],
+                        }), 2));
                     }
                 }
                 else {
-                    $this.find('.field-heb .inputs span').text(bayesapp.round(bayesapp.calculate([data]), 2));
+                    $this.find('.field-heb .inputs span').text(bayesapp.round(bayesapp.calculate(data), 2));
                 }
             },
             update_joined_fields: function($this, type) {
