@@ -7,13 +7,13 @@
 }
 
 .css3_linear_gradient(@startcolor: #ccc, @endcolor: #eee) {
-  background-image: -moz-linear-gradient(top, @startcolor, @endcolor);
-  background-image: -o-linear-gradient(top, @startcolor, @endcolor);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, @startcolor),color-stop(1, @endcolor));
-  background-image: -webkit-linear-gradient(@startcolor, @endcolor);
-  background-image: linear-gradient(top, @startcolor, @endcolor);
-            filter: %("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d',endColorstr='%d')", @startcolor, @endcolor);
-            -ms-filter: %("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d',endColorstr='%d')", @startcolor, @endcolor);
+  background: -moz-linear-gradient(top, @startcolor 0%, @endcolor 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startcolor), color-stop(100%,@endcolor));
+	background: -webkit-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	background: -o-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	background: -ms-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{startcolor}', endColorstr='@{endcolor}',GradientType=0 )";
+	background: linear-gradient(top, @startcolor 0%,@endcolor 100%);
 }
 
 .css3_border_radius(@radius: 5px) {

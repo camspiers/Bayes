@@ -86,29 +86,19 @@ body, html, select, input, textarea, button, pre, code, kbd, samp{
   font-family: 'Orbitron', Georgia, "Times New Roman", Times, serif;
 }
 body{
-  background-image: linear-gradient(bottom, rgb(255,255,255) 15%, rgb(171,204,204) 58%);
-background-image: -o-linear-gradient(bottom, rgb(255,255,255) 15%, rgb(171,204,204) 58%);
-background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 15%, rgb(171,204,204) 58%);
-background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 15%, rgb(171,204,204) 58%);
-background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 15%, rgb(171,204,204) 58%);
-
-background-image: -webkit-gradient(
-    linear,
-	left bottom,
-	left top,
-	color-stop(0.15, rgb(255,255,255)),
-	color-stop(0.58, rgb(171,204,204))
-);
+    .css3_linear_gradient(#ABCCCC,#FFFFFF);
 }
 
 h1{
 	font-size: 30px;
 	margin-bottom: 40px;
+    text-shadow: 2px 2px 2px #fff;
 }
 
 h2{
 	font-size: 20px;
 	margin-bottom: 10px;
+    text-shadow: 1px 1px 1px #fff;
 }
 
 #main{
@@ -133,9 +123,11 @@ h2{
     background-color: #D4E5E5;
     .css3_border_radius(4px);
     font-size: 18px;
+    text-shadow: 1px 1px 1px #fff;
     &:hover,&.active{
         background-color: #E491A4;
         color: #fff;
+        text-shadow: 1px 1px 1px #000;
     }
 }
 
