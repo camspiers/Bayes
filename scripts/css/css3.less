@@ -1,0 +1,66 @@
+
+.css3_transition(@elements: all, @time: 0.5s, @easing: ease-out) {
+     -moz-transition: @elements @time @easing;
+       -o-transition: @elements @time @easing;
+  -webkit-transition: @elements @time @easing;
+          transition: @elements @time @easing;
+}
+
+.css3_linear_gradient(@startcolor: #ccc, @endcolor: #eee) {
+  background: -moz-linear-gradient(top, @startcolor 0%, @endcolor 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startcolor), color-stop(100%,@endcolor));
+	background: -webkit-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	background: -o-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	background: -ms-linear-gradient(top, @startcolor 0%,@endcolor 100%);
+	filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{startcolor}', endColorstr='@{endcolor}',GradientType=0 )";
+	background: linear-gradient(top, @startcolor 0%,@endcolor 100%);
+}
+
+.css3_border_radius(@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.css3_border_top_left_radius(@radius: 5px) {
+  -webkit-border-top-left-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  border-top-left-radius: @radius;
+}
+
+.css3_border_top_right_radius(@radius: 5px) {
+  -webkit-border-top-right-radius: @radius;
+  -moz-border-radius-topright: @radius;
+  border-top-right-radius: @radius;
+}
+
+.css3_border_bottom_left_radius(@radius: 5px) {
+  -webkit-border-bottom-left-radius: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  border-bottom-left-radius: @radius;
+}
+
+.css3_border_bottom_right_radius(@radius: 5px) {
+  -webkit-border-bottom-right-radius: @radius;
+  -moz-border-radius-bottomright: @radius;
+  border-bottom-right-radius: @radius;
+}
+
+.css3_box_shadow(@x:10px, @y:10px, @blur:5px, @color: #ccc) {
+  -moz-box-shadow: @x @y @blur @color;
+  -webkit-box-shadow: @x @y @blur @color;
+  box-shadow: @x @y @blur @color;
+}
+
+.css3_box_shadow_inset(@x:10px, @y:10px, @blur:5px, @color: #ccc) {
+  -moz-box-shadow: inset @x @y @blur @color;
+  -webkit-box-shadow: inset @x @y @blur @color;
+  box-shadow: inset @x @y @blur @color;
+}
+
+.opacity(@val:0) {
+  opacity:@val;
+  -ms-filter:%("progid:DXImageTransform.Microsoft.Alpha(Opacity=%d)",@val*100);
+  filter: %("alpha(opacity=%d)", @val*100);
+
+}

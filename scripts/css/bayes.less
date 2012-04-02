@@ -1,0 +1,114 @@
+@import "scripts/css/css3.less";
+
+// Styles for bayes app components
+
+.bayes{
+
+	box-sizing: border-box;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+
+	*{
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		font-size: 100%;
+		font: inherit;
+		vertical-align: baseline;
+	}
+	
+	form{
+		fieldset{
+			border: 0;
+		}
+		legend{
+			text-shadow: 1px 1px 1px #fff;
+			font-weight: bold;
+			font-size: 16px;
+			line-height: 24px;
+			padding: 0px 0 20px 0;
+		}
+		.field{
+			margin-bottom: 10px;
+			label{
+				float: left;
+				width: 140px;
+				line-height: 20px;
+			}
+			input[type=number],
+			input[type=text]{
+				height: 30px;
+				width: 120px;
+				.css3_border_radius(5px);
+			}
+			.inputs span{
+				font-size: 14px;
+				line-height: 18px;
+			}
+			input[type=range]{
+				width: 120px;
+				margin-bottom: 5px;
+			}
+			.error{
+				border: 2px solid #B02;
+				background-color: #FFEEF1;
+			}
+		}
+		.inputs{
+			float: left;
+			margin-right: 10px;
+			width: 120px;
+		}
+		.hypothesis{
+			float: left;
+			margin-right: 20px;
+			&.fortiori{
+				.inputs{
+					float: left;
+					width: 55px;
+					input{
+						width: 55px;
+					}
+				}
+			}
+		}
+		.form_actions{
+			margin-top: 20px;
+		}
+		button, input[type="submit"]{
+			padding: 0;
+			color: #000000;
+			font-size: 14px;
+			background-color: #fff;
+			line-height: 30px;
+			border: 1px solid #000;
+			margin-right: 10px;
+			padding: 0 5px;
+			float: left;
+			.css3_border_radius(5px);
+			&:hover{
+				background-color: #FF5E99;
+			}
+			&.remove{
+				float: right;
+				margin: 0;
+			}
+		}
+	}
+
+	.hide{
+	  display: none;
+	}
+
+	.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+	.clearfix:after { clear: both; }
+	.clearfix { zoom: 1; }
+
+}
+
+.bayes-tooltip{
+	background-color: #fff;
+	padding: 10px;
+	border: 1px solid #FF5E99;
+	.css3_border_radius(4px);
+}
