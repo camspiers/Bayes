@@ -10,11 +10,9 @@
     <meta name="description" content="Bayesian Calculator">
     <meta name="author" content="Cam Spiers">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='http://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet/less" type="text/css" href="css/style.less">
     <script src="js/libs/less-1.1.3.min.js" type="text/javascript"></script>
-    <script src="js/libs/modernizr-1.7.min.js"></script>
   </head>
   <body>
     <div id="container">
@@ -36,13 +34,13 @@
                     <fieldset>
                         <legend>Labels</legend>
                         <div class="clearfix field">
-                            <label for="hypothesis">H</label>
+                            <label for="hypothesis">Hypothesis</label>
                             <div class="inputs">
                                 <input type="text" name="hypothesis" value="Hypothesis">
                             </div>
                         </div>
                         <div class="clearfix field">
-                            <label for="evidence">E</label>
+                            <label for="evidence">Evidence</label>
                             <div class="inputs">
                                 <input type="text" name="evidence" value="Evidence">
                             </div>
@@ -56,6 +54,7 @@
               </div>
               <div class="form_actions clearfix">
                 <button class="a_fortiori">A fortiori</button>
+                <!--<button class="get_link">Get link for calculation</button>-->
               </div>
             </form>
           </div>
@@ -117,44 +116,55 @@
     <script src="js/libs/jquery.tools.min.js"></script>
     <script src="js/libs/jquery.serializeobject.js"></script>
     <script src="js/libs/underscore.js"></script>
+    <script src="js/libs/heyday.hashlink.js"></script>
     <script src="js/script.js"></script>
 
     <script type="text/template" id="hypothesis">
       <fieldset class="hypothesis<%= a_fortiori ? ' fortiori' : '' %>">
-        <legend><%= labels.hypothesis %> <% if (!single) { %><%= num %><% } %></legend>
+        <legend>Probability that '<%= labels.hypothesis %>' is true given that '<%= labels.evidence %>' is true and the background evidence <% if (!single) { %><%= num %><% } %></legend>
         <% _.each(fields, function (field) { %>
         <div class="clearfix field field-<%= field.name %>">
           <label for="Abbreviated_H.b_<%= num %>" title="<%= _.template(field.title)({labels: labels}) %>"><%= _.template(field.label)({num: num, single: single}) %></label>
           <% if (a_fortiori) { %>
-          <div class="inputs">
-            <% if (!field.disabled) { %>
-            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } else { %>
-            <span><%= field.val %></span>
-            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } %>
-          </div>
-          <div class="inputs">
-            <% if (!field.disabled) { %>
-            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } else { %>
-            <span><%= field.val %></span>
-            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } %>
-          </div>
+            <% if (field.type == 'number') { %>
+              <div class="inputs">
+                <% if (!field.disabled) { %>
+                <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } else { %>
+                <span><%= field.val %></span>
+                <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } %>
+              </div>
+              <div class="inputs">
+                <% if (!field.disabled) { %>
+                <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } else { %>
+                <span><%= field.val %></span>
+                <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } %>
+              </div>
+            <% } else if (field.type == 'checkbox') { %>
+              <div class="inputs">
+                <input type="checkbox" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" value="<%= field.val %>" <%= field.checked ? 'checked="checked"' : '' %>/>
+              </div>
+            <% } /* end if */ %>
           <% } else { %>
-          <div class="inputs">
-            <% if (!field.disabled) { %>
-            <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } else { %>
-            <span><%= field.val %></span>
-            <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
-            <% } %>
-          </div>
-          <% } %>
+            <div class="inputs">
+              <% if (field.type == 'number') { %>
+                <% if (!field.disabled) { %>
+                <input type="range" name="proxy_<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } else { %>
+                <span><%= field.val %></span>
+                <input type="hidden" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+                <% } %>
+              <% } else if (field.type == 'checkbox') { %>
+                <input type="checkbox" name="<%= field.name %><% if (!single) { %>_<%= num %><% } %>" id="Abbreviated_<%= field.name %>_<%= num %>" value="<%= field.val %>" <%= field.checked ? 'checked="checked"' : '' %>/>
+              <% } /* end if */ %>
+            </div>
+          <% } /* end if */ %>
         </div>
         <% }); %>
         <% if (num != 1) { %>

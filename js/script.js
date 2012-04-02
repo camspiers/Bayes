@@ -15,30 +15,34 @@
                     name: 'hb',
                     label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
                     className: 'hb',
-                    val: 0,
+                    val: 0.5,
                     title: 'Probability that \'<%= labels.hypothesis %>\' is true given the background evidence',
-                    disabled: false
+                    disabled: false,
+                    type: 'number' 
                 }, {
                     name: 'nhb',
                     label: '\\(\\mathrm{\\Pr( \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %> \\mid b )}\\)',
                     className: 'nhb',
-                    val: 1,
+                    val: 0.5,
                     title: 'Probability that \'<%= labels.hypothesis %>\' is false given the background evidence',
-                    disabled: false
+                    disabled: false,
+                    type: 'number'
                 }, {
                     name: 'ehb',
                     label: '\\(\\mathrm{\\Pr( E \\mid H<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
                     className: '',
                     val: 0,
                     title: 'Probability that \'<%= labels.evidence %>\' is true given that \'<%= labels.hypothesis %>\' is true and the background evidence',
-                    disabled: false
+                    disabled: false,
+                    type: 'number'
                 }, {
                     name: 'enhb',
                     label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}<% if (!single) { %><%= \'_\' + num %><% } %>.b )}\\)',
                     className: '',
                     val: 0,
                     title: 'Probability that \'<%= labels.evidence %>\' is true given that \'<%= labels.hypothesis %>\' is false and the background evidence',
-                    disabled: false
+                    disabled: false,
+                    type: 'number'
                 }, {
                     name: 'eb',
                     label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
@@ -46,14 +50,23 @@
                     val: 0,
                     title: 'Probability that \'<%= labels.evidence %>\' is true given the background evidence',
                     hint: 'Must be greater than 0',
-                    disabled: false
-                }, {
+                    disabled: false,
+                    type: 'number'
+                },/* {
+                    name: 'negate_evidence',
+                    label: 'Negate Evidence',
+                    val: 1,
+                    title: 'When this is checked, the posterior is calculated as if the evidence failed to bear out',
+                    checked: false,
+                    type: 'checkbox'
+                }, */{
                     name: 'heb',
                     label: '\\(\\mathrm{\\Pr( H<% if (!single) { %><%= \'_\' + num %><% } %> \\mid E.b )}\\)',
                     className: '',
                     val: 0,
                     title: 'Probability that \'<%= labels.hypothesis %>\' is true given that \'<%= labels.evidence %>\' is true and the background evidence',
-                    disabled: true
+                    disabled: true,
+                    type: 'number'
                 }]
             },
             round: function(num, dec) {
@@ -84,7 +97,9 @@
                             errors.push('enhb');
                             errors.push('eb');
                         }
-                        if (data['enhb'][i] == 0 && data['eb'][i] <= 0) errors.push('eb');
+                        if (data['enhb'][i] == 0 && data['eb'][i] <= 0) {
+                            errors.push('eb');
+                        }
                         if (errors.length > 0) {
                             for (k in errors) {
                                 $form.find('.field-' + errors[k] + ' .inputs:eq(' + i + ') input[name=' + errors[k] + ']').addClass('error');
@@ -101,7 +116,9 @@
                         errors.push('enhb');
                         errors.push('eb');
                     }
-                    if (data['enhb'] == 0 && data['eb'] <= 0) errors.push('eb');
+                    if (data['enhb'] == 0 && data['eb'] <= 0) {
+                        errors.push('eb');
+                    }
                     if (errors.length > 0) {
                         for (i in errors) {
                             $inputs.filter('[name=' + errors[i] + ']').addClass('error');
@@ -112,8 +129,7 @@
             calculate: function(calc) {
                 if (calc.enhb > 0) {
                     return (parseFloat(calc.hb) * parseFloat(calc.ehb)) / (parseFloat(calc.hb) * parseFloat(calc.ehb) + parseFloat(calc.nhb) * parseFloat(calc.enhb));
-                }
-                else {
+                } else {
                     return parseFloat(calc.eb) != 0 ? (parseFloat(calc.hb) * parseFloat(calc.ehb)) / parseFloat(calc.eb) : 0;
                 }
             },
@@ -177,12 +193,21 @@
                         });
                     if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, $hypotheses_container.get(0)]);
                 });
+                // $('.get_link').click(function(e) {
+                //     e.preventDefault();
+                //     hashlink.change({
+                //         something: 'welcome'
+                //     });
+                // });
                 var $form = $('form');
                 $form.delegate('input[type=range]', 'change', function() {
                     bayesapp.update_joined_fields($(this), 'number');
                 });
                 $form.delegate('input[type=number]', 'change', function() {
                     bayesapp.update_joined_fields($(this), 'range');
+                });
+                $form.delegate('input[type=checkbox]', 'change', function() {
+                    bayesapp.update_calculation(false, $(this).closest('form'));
                 });
                 $form.delegate('.remove', 'click', function(event) {
                     event.preventDefault();
