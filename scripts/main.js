@@ -9,5 +9,11 @@ require(["bayes"], function(bayes) {
     		type: 'full',
     		styles: false
     	});
+        (new bayes).init({
+            selector: "#simple-multi",
+            type: 'simple',
+            styles: false,
+            num: 3
+        });
     });
 });

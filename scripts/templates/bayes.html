@@ -12,7 +12,9 @@
 
     <form action="#">
       <div class="basic hypotheses clearfix">
-        <%= bayes.hypothesis() %>
+        <% for (i =1; i <= bayes.config.num; i++) { %>
+        <%= bayes.hypothesis({ num: i }) %>
+        <% } %>
       </div>
       <div class="form_actions clearfix">
         <% if ( bayes.config.afortiori ) { %>
