@@ -15,5 +15,11 @@ require(["bayes"], function(bayes) {
             styles: false,
             num: 3
         });
+        (new bayes).init({
+            selector: "#simple-afortiori",
+            type: 'simple',
+            styles: false,
+            afortiori: true
+        });
     });
 });

@@ -127,14 +127,33 @@ define([
 
 				for (var i = 1; i <= self.config.num; i++) {
 
-					self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(self.round(self.calculate({
-						eb: data['eb_' + i],
-						ehb: data['ehb_' + i],
-						hb: data['hb_' + i],
-						heb: data['heb_' + i],
-						nhb: data['nhb_' + i],
-						enhb: data['enhb_' + i],
-					}), 2));
+					if (_.isArray(data['eb_' + i])) {
+
+						for (var j = 0; j < data['eb_' + i].length; j++) {
+
+							self.config.el.find('.field-heb .inputs:eq(' + j + ') span').text(self.round(self.calculate({
+								eb: data['eb_' + i][j],
+								ehb: data['ehb_' + i][j],
+								hb: data['hb_' + i][j],
+								heb: data['heb_' + i][j],
+								nhb: data['nhb_' + i][j],
+								enhb: data['enhb_' + i] ? data['enhb_' + i][j] : 0,
+							}), 2));
+
+						}
+
+					} else {
+
+						self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(self.round(self.calculate({
+							eb: data['eb_' + i],
+							ehb: data['ehb_' + i],
+							hb: data['hb_' + i],
+							heb: data['heb_' + i],
+							nhb: data['nhb_' + i],
+							enhb: data['enhb_' + i],
+						}), 2));
+
+					}
 
 				}
 
