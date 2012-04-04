@@ -54,6 +54,12 @@ define([
 
 				}
 
+				if (self.config.num == 2) {
+
+					self.config.num = 1;
+
+				}
+
 				self.render();
 
 			},
@@ -131,33 +137,62 @@ define([
 
 				var data = self.data();
 
-				for (var i = 1; i <= self.config.num; i++) {
+				if (self.config.num > 2) {
 
-					if (_.isArray(data['eb_' + i])) {
+					var calc = [];
 
-						for (var j = 0; j < data['eb_' + i].length; j++) {
+					for (var i = 1; i <= self.config.num; i++) {
 
-							self.config.el.find('.field-heb .inputs:eq(' + j + ') span').text(self.round(self.calculate({
-								eb: data['eb_' + i][j],
-								ehb: data['ehb_' + i][j],
-								hb: data['hb_' + i][j],
-								heb: data['heb_' + i][j],
-								nhb: data['nhb_' + i][j],
-								enhb: data['enhb_' + i] ? data['enhb_' + i][j] : 0,
+						calc.push({
+							eb: data['eb_' + i] ? data['eb_' + i] : 0,
+							ehb: data['ehb_' + i] ? data['ehb_' + i] : 0,
+							hb: data['hb_' + i] ? data['hb_' + i] : 0,
+							heb: data['heb_' + i] ? data['heb_' + i] : 0,
+							nhb: data['nhb_' + i] ? data['nhb_' + i] : 0,
+							enhb: data['enhb_' + i] ? data['enhb_' + i] : 0,
+						});
+
+					}
+
+					for (var i = 0; i < self.config.num; i++) {
+
+						self.config.el.find('.field-heb .inputs:eq(' + i + ') span').text(self.round(self.calculate(_.sortBy(calc, function (val, index) {
+							return index == i ? 0 : 1;
+						})), 2));
+
+					}
+
+				} else {
+
+					for (var i = 1; i <= self.config.num; i++) {
+
+						if (_.isArray(data['hb_' + i])) {
+
+							for (var j = 0; j < data['hb_' + i].length; j++) {
+
+								self.config.el.find('.field-heb .inputs:eq(' + j + ') span').text(self.round(self.calculate({
+									eb: data['eb_' + i] ? data['eb_' + i][j] : 0,
+									ehb: data['ehb_' + i] ? data['ehb_' + i][j] : 0,
+									hb: data['hb_' + i] ? data['hb_' + i][j] : 0,
+									heb: data['heb_' + i] ? data['heb_' + i][j] : 0,
+									nhb: data['nhb_' + i] ? data['nhb_' + i][j] : 0,
+									enhb: data['enhb_' + i] ? data['enhb_' + i][j] : 0,
+								}), 2));
+
+							}
+
+						} else {
+
+							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(self.round(self.calculate({
+								eb: data['eb_' + i],
+								ehb: data['ehb_' + i],
+								hb: data['hb_' + i],
+								heb: data['heb_' + i],
+								nhb: data['nhb_' + i],
+								enhb: data['enhb_' + i],
 							}), 2));
 
 						}
-
-					} else {
-
-						self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(self.round(self.calculate({
-							eb: data['eb_' + i],
-							ehb: data['ehb_' + i],
-							hb: data['hb_' + i],
-							heb: data['heb_' + i],
-							nhb: data['nhb_' + i],
-							enhb: data['enhb_' + i],
-						}), 2));
 
 					}
 
@@ -166,11 +201,32 @@ define([
 			},
 
 			calculate: function (calc) {
-				if (calc.enhb > 0) {
-					return (parseFloat(calc.hb) * parseFloat(calc.ehb)) / (parseFloat(calc.hb) * parseFloat(calc.ehb) + parseFloat(calc.nhb) * parseFloat(calc.enhb));
+
+				var numerator = 0,
+				denominator = [];
+
+				if (_.isArray(calc)) {
+
+					numerator = parseFloat(calc[0].hb) * parseFloat(calc[0].ehb);
+
+					_.each(calc, function (val) {
+						denominator.push(parseFloat(val.hb) * parseFloat(val.ehb));
+					});
+
+					return numerator / _.reduce(denominator, function (mem, val) {
+						return mem + val;
+					})
+
 				} else {
-					return parseFloat(calc.eb) != 0 ? (parseFloat(calc.hb) * parseFloat(calc.ehb)) / parseFloat(calc.eb) : 0;
+
+					if (calc.enhb > 0) {
+						return (parseFloat(calc.hb) * parseFloat(calc.ehb)) / (parseFloat(calc.hb) * parseFloat(calc.ehb) + parseFloat(calc.nhb) * parseFloat(calc.enhb));
+					} else {
+						return parseFloat(calc.eb) != 0 ? (parseFloat(calc.hb) * parseFloat(calc.ehb)) / parseFloat(calc.eb) : 0;
+					}
+
 				}
+
 			},
 
 			sync_fields: function($this, type) {
@@ -193,115 +249,138 @@ define([
 
 			data: function () {
 
-				var paramObj = {};
-				_.each(self.config.el.find('form').serializeArray(), function(obj) {
-				  if (paramObj.hasOwnProperty(obj.name)) {
-				    paramObj[obj.name] = $.makeArray(paramObj[obj.name]);
-				    paramObj[obj.name].push(obj.value);
+				var data = {};
+				_.each(self.config.el.find('form input[type=number]').serializeArray(), function(obj) {
+				  if (data.hasOwnProperty(obj.name)) {
+				    data[obj.name] = $.makeArray(data[obj.name]);
+				    data[obj.name].push(obj.value);
 				  }
 				  else {
-				    paramObj[obj.name] = obj.value;
+				    data[obj.name] = obj.value;
 				  }
 				});
 
-				return paramObj;
+				return data;
 
 			},
 
-			fields: function () {
+			fields: function (num) {
+
+				var fields = [],
+				field_types = [
+					{
+						alias: 'hb single',
+						name: 'hb',
+						label: '\\(\\mathrm{\\Pr( H \\mid b )}\\)',
+						className: 'hb',
+						val: 0.5,
+						title: 'Probability that the hypothesis is true given the background evidence',
+						disabled: false,
+						type: 'number' 
+					}, {
+						name: 'hb',
+						label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)',
+						className: 'hb',
+						val: 0.5,
+						title: 'Probability that the hypothesis is true given the background evidence',
+						disabled: false,
+						type: 'number' 
+					}, {
+						name: 'nhb',
+						label: '\\(\\mathrm{\\Pr( \\neg{H} \\mid b )}\\)',
+						className: 'nhb',
+						val: 0.5,
+						title: 'Probability that the hypothesis is false given the background evidence',
+						disabled: false,
+						type: 'number'
+					}, {
+						name: 'ehb',
+						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
+						className: 'ehb',
+						val: 0,
+						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
+						disabled: false,
+						type: 'number'
+					}, {
+						alias: 'ehb single',
+						name: 'ehb',
+						label: '\\(\\mathrm{\\Pr( E \\mid H.b )}\\)',
+						className: 'ehb',
+						val: 0,
+						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
+						disabled: false,
+						type: 'number'
+					}, {
+						name: 'eb',
+						label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
+						className: 'eb',
+						val: 0,
+						title: 'Probability that the evidence is true given the background evidence',
+						hint: 'Must be greater than 0',
+						disabled: false,
+						type: 'number'
+					}, {
+						alias: 'enhb single',
+						name: 'enhb',
+						label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}_<%= num %>.b )}\\)',
+						className: 'enhb',
+						val: 0,
+						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
+						disabled: false,
+						type: 'number'
+					}, {
+						name: 'enhb',
+						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
+						className: 'enhb',
+						val: 0,
+						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
+						disabled: false,
+						type: 'number'
+					}, {
+						name: 'heb',
+						label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid E.b )}\\)',
+						className: 'heb',
+						val: 0,
+						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
+						disabled: true,
+						type: 'number'
+					}, {
+						alias: 'heb single',
+						name: 'heb',
+						label: '\\(\\mathrm{\\Pr( H \\mid E.b )}\\)',
+						className: 'heb',
+						val: 0,
+						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
+						disabled: true,
+						type: 'number'
+					}
+				];
 
 				switch (self.config.type) {
 
 					case 'simple':
 
-						return [{
-							name: 'hb',
-							label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)',
-							className: 'hb',
-							val: 0.5,
-							title: 'Probability that the hypothesis is true given the background evidence',
-							disabled: false,
-							type: 'number' 
-						}, {
-							name: 'nhb',
-							label: '\\(\\mathrm{\\Pr( \\neg{H}_<%= num %> \\mid b )}\\)',
-							className: 'nhb',
-							val: 0.5,
-							title: 'Probability that the hypothesis is false given the background evidence',
-							disabled: false,
-							type: 'number'
-						},  {
-							name: 'ehb',
-							label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
-							disabled: false,
-							type: 'number'
-						}, {
-							name: 'eb',
-							label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the evidence is true given the background evidence',
-							hint: 'Must be greater than 0',
-							disabled: false,
-							type: 'number'
-						}, {
-							name: 'heb',
-							label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid E.b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
-							disabled: true,
-							type: 'number'
-						}];
+						var include = self.config.num > 2 ? [] : ['hb single', 'nhb', 'ehb single', 'eb', 'heb single'];
+
+						fields = _.filter(field_types, function (value) {
+							return _.include(include, value.alias ? value.alias : value.name);
+						});
+
+						break;
 
 					case 'full':
 
-						return [{
-							name: 'hb',
-							label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)',
-							className: 'hb',
-							val: 0.5,
-							title: 'Probability that the hypothesis is true given the background evidence',
-							disabled: false,
-							type: 'number' 
-						}, {
-							name: 'nhb',
-							label: '\\(\\mathrm{\\Pr( \\neg{H}_<%= num %> \\mid b )}\\)',
-							className: 'nhb',
-							val: 0.5,
-							title: 'Probability that the hypothesis is false given the background evidence',
-							disabled: false,
-							type: 'number'
-						},  {
-							name: 'ehb',
-							label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
-							disabled: false,
-							type: 'number'
-						}, {
-							name: 'enhb',
-							label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}_<%= num %>.b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
-							disabled: false,
-							type: 'number'
-						}, {
-							name: 'heb',
-							label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid E.b )}\\)',
-							className: '',
-							val: 0,
-							title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
-							disabled: true,
-							type: 'number'
-						}];
+						var include = self.config.num > 2 ? ['hb', 'ehb', 'heb'] : ['hb single', 'nhb', 'ehb single', 'enhb single', 'heb single'];
+
+						fields = _.filter(field_types, function (value) {
+							return _.include(include, value.alias ? value.alias : value.name)
+						});
+
+						break;
 
 				}
+
+				return fields;
 
 			},
 
@@ -326,6 +405,48 @@ define([
 			round: function(num, dec) {
 
 				return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+
+			},
+
+			equation: function () {
+				//$$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
+
+				var left = '',
+				numerator = '',
+				denominator = [];
+
+				if (self.config.num == 1) {
+
+					var left = '\\Pr( H \\mid E.b )',
+					numerator = '\\Pr( H \\mid b ) \\Pr( E \\mid H.b )',
+					denominator = [];
+
+					if (self.config.type == 'simple') {
+
+						denominator.push('\\Pr( E \\mid b )');
+
+					} else {
+
+						denominator.push('\\Pr( H \\mid b ) \\Pr( E \\mid H.b )');
+						denominator.push('\\Pr(\\neg{H} \\mid b ) \\Pr( E \\mid \\neg{H}.b )');
+
+					}
+
+				} else {
+
+					left = '\\Pr( H_1 \\mid E.b )';
+					numerator = '\\Pr( H_1 \\mid E.b )';
+
+					for (var i = 1; i <= self.config.num; i++) {
+
+						denominator.push('\\Pr( H_' + i + ' \\mid b ) \\Pr( E \\mid H_' + i + '.b )');
+
+					}
+
+				}
+
+				return '$$\\mathrm{' + left + ' = \\frac{' + numerator + '}{' + denominator.join(' + ') + '}}$$';
+
 
 			},
 

@@ -1,21 +1,12 @@
 <div class="bayes">
-
-  <% if (bayes.config.type == 'simple') { %>
-    <div class="equation">
-      $$\mathrm{\Pr(H \mid E.b) = \frac{\Pr(H \mid b) \Pr(E \mid H.b)}{\Pr(E \mid b)}}$$
+  <div class="equation">
+    <%= bayes.equation() %>
+  </div>
+  <form action="#">
+    <div class="basic hypotheses clearfix">
+    <% for (i =1; i <= bayes.config.num; i++) { %>
+      <%= bayes.hypothesis({ num: i }) %>
+    <% } %>
     </div>
-   <% } else if (bayes.config.type == 'full') { %>
-    <div class="equation">
-      $$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
-    </div>
-   <% } %>
-
-    <form action="#">
-      <div class="basic hypotheses clearfix">
-        <% for (i =1; i <= bayes.config.num; i++) { %>
-        <%= bayes.hypothesis({ num: i }) %>
-        <% } %>
-      </div>
-    </form>
-
+  </form>
 </div>

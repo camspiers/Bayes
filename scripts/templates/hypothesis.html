@@ -1,5 +1,5 @@
 <fieldset class="hypothesis<%= bayes.config.afortiori ? ' fortiori' : '' %>">
-  <% _.each(bayes.fields(), function (field) { %>
+  <% _.each(bayes.fields(num), function (field) { %>
   <div class="clearfix field field-<%= field.name %>">
     <label for="Abbreviated_H.b_<%= num %>" title="<%= field.title %>"><%= _.template(field.label)({num: num}) %></label>
     <% if (bayes.config.afortiori) { %>

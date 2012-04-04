@@ -3,7 +3,7 @@ require(["jquery", "bayes"], function($, bayes) {
         $('.bayes-calc').each(function () {
             var $this = $(this);
             (new bayes).init($.extend({
-                el: $(this)
+                el: $this
             }, $this.data('config')));
         });
     });

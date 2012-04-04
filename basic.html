@@ -5,12 +5,13 @@
 	<title>Basic RequireJS bayes calc set-up</title>
 	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 	<script src="scripts/bayes-calc-so.js"></script>
-	<!--<script data-main="scripts/main" src="scripts/require-jquery.js"></script>-->
+	<!--<<script data-main="scripts/main" src="scripts/require-jquery.js"></script>-->
 </head>
 <body>
 	<div class="bayes-calc" data-config='{"type": "simple"}'></div>
 	<div class="bayes-calc" data-config='{"type": "full"}'></div>
 	<div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'></div>
-	<div class="bayes-calc" data-config='{"type": "simple", "num": 3, "css": {"width": "900px"}}'></div>
+	<div class="bayes-calc" data-config='{"type": "full", "afortiori": true}'></div>
+	<div class="bayes-calc" data-config='{"type": "full", "num": 3, "css": {"width": "900px"}}'></div>
 </body>
 </html>
