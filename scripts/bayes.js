@@ -9,8 +9,8 @@ define([
 	"../scripts/html5slider.js"
 ], function ($, _, bayes, hypothesis, style) {
 
+	//$: jQuery
 	//_: underscore
-	//l: nothing
 	//bayes: bayes main template
 	//hypothesis: hypothesis template
 	//style: less styles
@@ -72,7 +72,6 @@ define([
 				if (!$('#bayes-calc-styles').length) {
 
 					self.css(style);
-					// self.less(style);
 
 				}
 
@@ -80,7 +79,7 @@ define([
 
 				if (self.config.selector || self.config.el.length) {
 
-					self.config.el = self.config.el ? self.config.el : $(self.config.selector);
+					self.config.el = self.config.el.length ? self.config.el : $(self.config.selector);
 
 					self.config.el.css(self.config.css);
 
@@ -91,18 +90,17 @@ define([
 						if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
 
 						//Attach events
-
 						self.events();
 
 					} else {
 
-						self.error('No configured');
+						self.error('Not configured correctly');
 
 					}
 
 				} else {
 
-					self.error('No configured');
+					self.error('Not configured correctly');
 
 				}
 
@@ -216,14 +214,18 @@ define([
 
 					return numerator / _.reduce(denominator, function (mem, val) {
 						return mem + val;
-					})
+					});
 
 				} else {
 
 					if (calc.enhb > 0) {
+
 						return (parseFloat(calc.hb) * parseFloat(calc.ehb)) / (parseFloat(calc.hb) * parseFloat(calc.ehb) + parseFloat(calc.nhb) * parseFloat(calc.enhb));
+
 					} else {
+
 						return parseFloat(calc.eb) != 0 ? (parseFloat(calc.hb) * parseFloat(calc.ehb)) / parseFloat(calc.eb) : 0;
+
 					}
 
 				}
@@ -251,14 +253,20 @@ define([
 			data: function () {
 
 				var data = {};
+
 				_.each(self.config.el.find('form input[type=number]').serializeArray(), function(obj) {
+
 				  if (data.hasOwnProperty(obj.name)) {
-				    data[obj.name] = $.makeArray(data[obj.name]);
-				    data[obj.name].push(obj.value);
-				  }
-				  else {
-				    data[obj.name] = obj.value;
-				  }
+
+						data[obj.name] = $.makeArray(data[obj.name]);
+						data[obj.name].push(obj.value);
+
+				  } else {
+
+						data[obj.name] = obj.value;
+
+					}
+
 				});
 
 				return data;
@@ -323,7 +331,7 @@ define([
 					}, {
 						alias: 'enhb single',
 						name: 'enhb',
-						label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}_<%= num %>.b )}\\)',
+						label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}.b )}\\)',
 						className: 'enhb',
 						val: 0,
 						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
@@ -410,7 +418,6 @@ define([
 			},
 
 			equation: function () {
-				//$$\mathrm{\Pr( H \mid E.b ) = \frac{\Pr( H \mid b ) \Pr( E \mid H.b )}{\Pr( H \mid b ) \Pr( E \mid H.b) + \Pr(\neg{H} \mid b ) \Pr( E \mid \neg{H}.b )}}$$
 
 				var left = '',
 				numerator = '',
@@ -436,7 +443,7 @@ define([
 				} else {
 
 					left = '\\Pr( H_1 \\mid E.b )';
-					numerator = '\\Pr( H_1 \\mid E.b )';
+					numerator = '\\Pr( H_1 \\mid b )Pr( E \\mid H_1.b )';
 
 					for (var i = 1; i <= self.config.num; i++) {
 
@@ -453,22 +460,6 @@ define([
 
 			//adds less text to dom
 
-			less: function (lessText) {
-
-				(new less.Parser()).parse(lessText, function (err, css) {
-					if (err) {
-						if (typeof console !== 'undefined' && console.error) {
-							console.error(err);
-						}
-					} else {
-						self.css(css.toCSS());
-					}
-				});
-
-			},
-
-			//adds less text to dom
-
 			css: function (css) {
 
 				style = document.createElement('style');
@@ -476,9 +467,13 @@ define([
 				style.id = "bayes-calc-styles";
 
 				if (style.styleSheet) {
+
 					style.styleSheet.cssText = css;
+
 				} else {
+
 					style.appendChild( document.createTextNode( css ) );
+
 				}
 				
 				document.getElementsByTagName("head")[0].appendChild( style );
