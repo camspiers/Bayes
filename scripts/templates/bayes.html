@@ -1,7 +1,9 @@
 <div class="bayes">
+  <% if (bayes.config.equation) { %>
   <div class="equation">
     <%= bayes.equation() %>
   </div>
+  <% } %>
   <form action="#">
     <div class="basic hypotheses clearfix">
     <% for (i =1; i <= bayes.config.num; i++) { %>

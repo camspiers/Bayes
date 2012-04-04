@@ -36,6 +36,7 @@ define([
 				},
 				afortiori: false,
 				num: 1,
+				equation: true,
 				css: {
 					width: "400px"
 				}

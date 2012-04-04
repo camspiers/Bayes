@@ -6,12 +6,45 @@
 	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 	<script src="scripts/bayes-calc-so.js"></script>
 	<!--<<script data-main="scripts/main" src="scripts/require-jquery.js"></script>-->
+	<style type="text/css">
+		body{
+			font-family: tahoma, arial, sans-serif;
+		}
+		pre{
+
+		}
+	</style>
 </head>
 <body>
+	<h1>Simple</h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "simple"}'&gt;&lt;/div&gt;
+	</pre>
 	<div class="bayes-calc" data-config='{"type": "simple"}'></div>
+	<h1>Full with equation</h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "full"}'&gt;&lt;/div&gt;
+	</pre>
 	<div class="bayes-calc" data-config='{"type": "full"}'></div>
+	<h1>Full without equation</h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "full", "equation": false}'&gt;&lt;/div&gt;
+	</pre>
+	<div class="bayes-calc" data-config='{"type": "full", "equation": false}'></div>
+	<h1>Simple <em>a fortiori</em></h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'&gt;&lt;/div&gt;
+	</pre>
 	<div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'></div>
+	<h1>Full <em>a fortiori</em></h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "full", "afortiori": true}'&gt;&lt;/div&gt;
+	</pre>
 	<div class="bayes-calc" data-config='{"type": "full", "afortiori": true}'></div>
+	<h1>3 Hypotheses</h1>
+	<pre>
+&lt;div class="bayes-calc" data-config='{"type": "full", "num": 3, "css": {"width": "900px"}}'&gt;&lt;/div&gt;
+	</pre>
 	<div class="bayes-calc" data-config='{"type": "full", "num": 3, "css": {"width": "900px"}}'></div>
 </body>
 </html>
