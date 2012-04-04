@@ -1,13 +1,13 @@
 //Depends on jQuery and underscore
 define([
+	"jquery",
 	"underscore",
-	"../scripts/less-1.1.3.min.js", //remove this and replace with compiled css
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
-	// "text!./css/bayes.less",
 	"text!./css/bayes.css",
-	"../scripts/jquery.tools.min.js"
-], function (_, l, bayes, hypothesis, style) {
+	"../scripts/jquery.tools.min.js",
+	"../scripts/html5slider.js"
+], function ($, _, bayes, hypothesis, style) {
 
 	//_: underscore
 	//l: nothing

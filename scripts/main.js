@@ -1,4 +1,4 @@
-require(["bayes"], function(bayes) {
+require(["jquery", "bayes"], function($, bayes) {
     $(function() {
         $('.bayes-calc').each(function () {
             var $this = $(this);
