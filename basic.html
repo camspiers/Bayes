@@ -1,15 +1,18 @@
-<html>
+<!doctype html>
+<!--[if (lte IE 9)]> <html class="ie" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
 	<title>Basic RequireJS bayes calc set-up</title>
 	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script src="https://raw.github.com/fryn/html5slider/master/html5slider.js"></script>
 	<script src="scripts/require-jquery.js"></script>
-	<script src="scripts/bayes-app.js"></script>
-	<!-- <script data-main="scripts/main" src="scripts/require-jquery.js"></script> -->
+	<script src="scripts/bayes-calc.js"></script>
+	<!--<script data-main="scripts/main" src="scripts/require-jquery.js"></script>-->
 </head>
 <body>
-	<div id="simple" style="width: 400px;"></div>
-	<div id="full" style="width: 400px;"></div>
-	<div id="simple-multi" style="width: 900px;"></div>
-	<div id="simple-afortiori" style="width: 900px;"></div>
+	<div class="bayes-calc" data-config='{"type": "simple"}'></div>
+	<div class="bayes-calc" data-config='{"type": "full"}'></div>
+	<div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'></div>
+	<div class="bayes-calc" data-config='{"type": "simple", "num": 3, "css": {"width": "900px"}}'></div>
 </body>
 </html>

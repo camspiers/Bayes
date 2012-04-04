@@ -1,10 +1,11 @@
 //Depends on jQuery and underscore
 define([
 	"underscore",
-	"../scripts/less-1.1.3.min.js",
+	"../scripts/less-1.1.3.min.js", //remove this and replace with compiled css
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
-	"text!./css/bayes.less",
+	// "text!./css/bayes.less",
+	"text!./css/bayes.css",
 	"../scripts/jquery.tools.min.js"
 ], function (_, l, bayes, hypothesis, style) {
 
@@ -34,8 +35,10 @@ define([
 					hypothesis: _.template(hypothesis)
 				},
 				afortiori: false,
-				styles: true,
-				num: 1
+				num: 1,
+				css: {
+					width: "400px"
+				}
 
 			},
 
@@ -59,17 +62,20 @@ define([
 
 				//Render css
 
-				if (self.config.styles) {
+				if (!$('#bayes-calc-styles').length) {
 
-					self.less(style);
+					self.css(style);
+					// self.less(style);
 
 				}
 
 				//Render templates into selector.
 
-				if (self.config.selector) {
+				if (self.config.selector || self.config.el.length) {
 
-					self.config.el = $(self.config.selector);
+					self.config.el = self.config.el ? self.config.el : $(self.config.selector);
+
+					self.config.el.css(self.config.css);
 
 					if (self.config.el.length) {
 
@@ -177,10 +183,10 @@ define([
 				$this.siblings('input[type=' + type + ']').val($this.val());
 				
 				if ($field.hasClass('field-hb')) {
-					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(1 - parseFloat($this.val()));
+					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
 				}
 				if ($field.hasClass('field-nhb')) {
-					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(1 - parseFloat($this.val()));
+					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
 				}
 
 			},
@@ -333,12 +339,27 @@ define([
 							console.error(err);
 						}
 					} else {
-						var style = document.createElement('style');
-						style.type = 'text/css';
-						style.textContent = css.toCSS();
-						document.getElementsByTagName("head")[0].appendChild( style );
+						self.css(css.toCSS());
 					}
 				});
+
+			},
+
+			//adds less text to dom
+
+			css: function (css) {
+
+				style = document.createElement('style');
+				style.type = 'text/css';
+				style.id = "bayes-calc-styles";
+
+				if (style.styleSheet) {
+					style.styleSheet.cssText = css;
+				} else {
+					style.appendChild( document.createTextNode( css ) );
+				}
+				
+				document.getElementsByTagName("head")[0].appendChild( style );
 
 			},
 

@@ -1,0 +1,19 @@
+.ie .bayes .bayes-range{display:none;}
+.bayes{box-sizing:border-box;font-family:"Times New Roman",Times,serif;font-size:16px;}.bayes *{box-sizing:border-box;margin:0;padding:0;font-size:100%;font:inherit;vertical-align:baseline;}
+.bayes form fieldset{border:0;}
+.bayes form legend{text-shadow:1px 1px 1px #fff;font-weight:bold;font-size:16px;line-height:24px;padding:0px 0 20px 0;}
+.bayes form .field{margin-bottom:10px;}.bayes form .field label{float:left;width:140px;line-height:20px;}
+.bayes form .field input[type=number],.bayes form .field input[type=text]{height:30px;width:120px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
+.bayes form .field .inputs span{font-size:14px;line-height:18px;}
+.bayes form .field input[type=range]{width:120px;margin-bottom:5px;}
+.bayes form .field .error{border:2px solid #B02;background-color:#FFEEF1;}
+.bayes form .inputs{float:left;margin-right:10px;width:120px;}
+.bayes form .hypothesis{float:left;margin-right:20px;}.bayes form .hypothesis.fortiori .inputs{float:left;width:55px;}.bayes form .hypothesis.fortiori .inputs input{width:55px;}
+.bayes form .form_actions{margin-top:20px;}
+.bayes form button,.bayes form input[type="submit"]{padding:0;color:#000000;font-size:14px;background-color:#fff;line-height:30px;border:1px solid #000;margin-right:10px;padding:0 5px;float:left;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}.bayes form button:hover,.bayes form input[type="submit"]:hover{background-color:#FF5E99;}
+.bayes form button.remove,.bayes form input[type="submit"].remove{float:right;margin:0;}
+.bayes .hide{display:none;}
+.bayes .clearfix:before,.bayes .clearfix:after{content:"\0020";display:block;height:0;overflow:hidden;}
+.bayes .clearfix:after{clear:both;}
+.bayes .clearfix{zoom:1;}
+.bayes-tooltip{background-color:#fff;padding:10px;border:1px solid #FF5E99;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
