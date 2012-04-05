@@ -1,14 +1,21 @@
 <div class="bayes">
-  <% if (bayes.config.equation) { %>
-  <div class="equation">
-    <%= bayes.equation() %>
-  </div>
-  <% } %>
-  <form action="#">
-    <div class="basic hypotheses clearfix">
-    <% for (i =1; i <= bayes.config.num; i++) { %>
-      <%= bayes.hypothesis({ num: i }) %>
-    <% } %>
+  <div class="clearfix">
+    <div class="bayes-form">
+      <% if (bayes.config.equation) { %>
+      <div class="equation">
+        <%= bayes.equation() %>
+      </div>
+      <% } %>
+      <form action="#">
+        <div class="basic hypotheses clearfix">
+        <% for (i =1; i <= bayes.config.num; i++) { %>
+          <%= bayes.hypothesis({ num: i }) %>
+        <% } %>
+        </div>
+      </form>
     </div>
-  </form>
+    <% if (bayes.config.graph) { %>
+    <div class="bayes-graph"></div>
+    <% } %>
+  </div>
 </div>

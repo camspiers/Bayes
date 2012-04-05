@@ -4,12 +4,11 @@ define([
 	"underscore",
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
-	"text!./templates/graph.html",
 	"text!./css/bayes.css",
 	"../scripts/jquery.tools.min.js",
 	"../scripts/html5slider.js",
 	"../scripts/d3.v2.min.js"
-], function ($, _, bayes, hypothesis, graph, style) {
+], function ($, _, bayes, hypothesis, style) {
 
 	//$: jQuery
 	//_: underscore
@@ -17,9 +16,14 @@ define([
 	//hypothesis: hypothesis template
 	//style: less styles
 
-	if (MathJax) {
+	if (!_.isUndefined(MathJax)) {
 
 		MathJax.Hub.Config({displayAlign: "left"});
+
+	} else {
+
+		var MathJax= false;
+		console.log('math jax not found');
 
 	}
 	
@@ -34,14 +38,13 @@ define([
 				el: false,
 				templates: {
 					bayes: _.template(bayes),
-					hypothesis: _.template(hypothesis),
-					graph: _.template(graph)
+					hypothesis: _.template(hypothesis)
 				},
 				afortiori: false,
 				num: 1,
 				equation: true,
 				css: {
-					width: "400px"
+					width: "500px"
 				},
 				graph: false
 
@@ -59,9 +62,27 @@ define([
 
 				}
 
-				if (self.config.num == 2) {
+				if (_.isUndefined(config.css) || _.isUndefined(config.css.width)) {
 
-					self.config.num = 1;
+					var width = 500;
+
+					if (self.config.num <= 2) {
+
+						self.config.num = 1;
+
+					} else {
+
+						width = 290 * self.config.num;
+
+					}
+
+					if (self.config.graph) {
+
+						width += 440;
+
+					}
+
+					self.config.css.width = width + "px";
 
 				}
 
@@ -92,8 +113,6 @@ define([
 						self.config.el.html(self.template('bayes'));
 
 						if (self.config.graph) {
-
-							self.config.el.append(self.template('graph'));
 
 							self.graph('hypotheses');
 							self.graph('expected-evidence');
@@ -484,13 +503,9 @@ define([
 			},
 
 			graph_data: function (class_name) {
-				// eb_1: "0"
-				// ehb_1: "0"
-				// hb_1: "0.5"
-				// heb_1: "0"
-				//nhb_1
+				
 				var raw = self.data();
-				console.log(raw);
+				// console.log(raw);
 
 				var data = [];
 
@@ -533,7 +548,7 @@ define([
 				width = 400,
 				height = 100;
 
-				var chart = d3.select(".bayes-graph")
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
 					.append("svg")
 					.attr("class", class_name)
 					.attr("width", width + 20)
@@ -586,7 +601,7 @@ define([
 
 			graph_redraw: function (class_name) {
 
-				var chart = d3.select(".bayes-graph ." + class_name);
+				var chart = d3.select(self.config.el.find(".bayes-graph ." + class_name).get(0));
 
 				var data = self.graph_data(class_name);
 
