@@ -4,10 +4,12 @@ define([
 	"underscore",
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
+	"text!./templates/graph.html",
 	"text!./css/bayes.css",
 	"../scripts/jquery.tools.min.js",
-	"../scripts/html5slider.js"
-], function ($, _, bayes, hypothesis, style) {
+	"../scripts/html5slider.js",
+	"../scripts/d3.v2.min.js"
+], function ($, _, bayes, hypothesis, graph, style) {
 
 	//$: jQuery
 	//_: underscore
@@ -32,14 +34,16 @@ define([
 				el: false,
 				templates: {
 					bayes: _.template(bayes),
-					hypothesis: _.template(hypothesis)
+					hypothesis: _.template(hypothesis),
+					graph: _.template(graph)
 				},
 				afortiori: false,
 				num: 1,
 				equation: true,
 				css: {
 					width: "400px"
-				}
+				},
+				graph: false
 
 			},
 
@@ -86,6 +90,16 @@ define([
 					if (self.config.el.length) {
 
 						self.config.el.html(self.template('bayes'));
+
+						if (self.config.graph) {
+
+							self.config.el.append(self.template('graph'));
+
+							self.graph('hypotheses');
+							self.graph('expected-evidence');
+							self.graph('posteriors');
+
+						}
 
 						if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
 
@@ -182,18 +196,29 @@ define([
 
 						} else {
 
-							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(self.round(self.calculate({
+							var calc = self.round(self.calculate({
 								eb: data['eb_' + i],
 								ehb: data['ehb_' + i],
 								hb: data['hb_' + i],
 								heb: data['heb_' + i],
 								nhb: data['nhb_' + i],
 								enhb: data['enhb_' + i],
-							}), 2));
+							}), 2);
+
+							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(calc);
+							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') input').val(calc);
 
 						}
 
 					}
+
+				}
+
+				if (self.config.graph) {
+
+					self.graph_redraw('hypotheses');
+					self.graph_redraw('expected-evidence');
+					self.graph_redraw('posteriors');
 
 				}
 
@@ -254,7 +279,7 @@ define([
 
 				var data = {};
 
-				_.each(self.config.el.find('form input[type=number]').serializeArray(), function(obj) {
+				_.each(self.config.el.find('form input[type=number],form input[type=hidden]').serializeArray(), function(obj) {
 
 				  if (data.hasOwnProperty(obj.name)) {
 
@@ -455,6 +480,132 @@ define([
 
 				return '$$\\mathrm{' + left + ' = \\frac{' + numerator + '}{' + denominator.join(' + ') + '}}$$';
 
+
+			},
+
+			graph_data: function (class_name) {
+				// eb_1: "0"
+				// ehb_1: "0"
+				// hb_1: "0.5"
+				// heb_1: "0"
+				//nhb_1
+				var raw = self.data();
+				console.log(raw);
+
+				var data = [];
+
+				switch (class_name) {
+
+					case 'hypotheses':
+						if (self.config.num == 1) {
+							data = [raw['hb_1'], raw['nhb_1']];
+						}
+						break;
+
+					case 'expected-evidence':
+						if (self.config.num == 1) {
+							if (self.config.type == 'simple') {
+								data = [raw['ehb_1'], raw['eb_1'] != 0 ? (raw['eb_1'] - raw['hb_1'] * raw['ehb_1']) / raw['nhb_1'] : 0];
+							} else {
+								data = [raw['ehb_1'], raw['enhb_1']];
+							}
+						}
+						break;
+
+					case 'posteriors':
+						if (self.config.num == 1) {
+							data = [raw['heb_1'], 1 - raw['heb_1']];
+						}
+						break;
+
+				}
+
+				return _.map(data, function (val) {
+					return self.round(val, 2);
+				});
+
+			},
+
+			graph: function (class_name) {
+
+				var data = self.graph_data(class_name),
+				markers = [0, 0.25, 0.5, 0.75, 1],
+				width = 400,
+				height = 100;
+
+				var chart = d3.select(".bayes-graph")
+					.append("svg")
+					.attr("class", class_name)
+					.attr("width", width + 20)
+					.attr("height", height + 20)
+					.append("g")
+					.attr("transform", "translate(10,15)");
+
+				var x = function (d) {
+					return d * width;
+				}
+
+				chart.selectAll("line")
+					.data(markers)
+					.enter().append("line")
+					.attr("x1", x)
+					.attr("x2", x)
+					.attr("y1", 0)
+					.attr("y2", height)
+					.style("stroke", "#ccc");
+
+				chart.selectAll(".rule")
+					.data(markers)
+					.enter().append("text")
+					.attr("class", "rule")
+					.attr("x", x)
+					.attr("y", 0)
+					.attr("dy", -3)
+					.attr("text-anchor", "middle")
+					.text(String);
+
+				chart.selectAll("rect")
+					.data(data)
+					.enter().append("rect")
+					.attr("y", function(d, i) { return i * (height / data.length); } )
+					.attr("width", x)
+					.attr("height", (height / data.length));
+
+				chart.selectAll(".bar")
+					.data(data)
+					.enter().append("text")
+					.attr("class", "bar")
+					.attr("x", x)
+					.attr("dx", -3) // padding-right
+					.attr("y", function(d, i) { return i * (height / data.length) + (height / data.length / 2); } )
+					.attr("dy", ".35em") // vertical-align: middle
+					.attr("text-anchor", "end") // text-align: right
+					.text(String);
+
+			},
+
+			graph_redraw: function (class_name) {
+
+				var chart = d3.select(".bayes-graph ." + class_name);
+
+				var data = self.graph_data(class_name);
+
+				chart.selectAll("rect")
+					.data(data)
+					.transition()
+					.duration(1000)
+					.attr("width", function (d) {
+						return d * 400;
+					});
+
+				chart.selectAll(".bar")
+					.data(data)
+					.transition()
+					.duration(1000)
+					.attr("x", function (d) {
+						return d * 400;
+					})
+					.text(String);
 
 			},
 

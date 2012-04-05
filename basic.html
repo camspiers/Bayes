@@ -4,8 +4,8 @@
 <head>
 	<title>Basic RequireJS bayes calc set-up</title>
 	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-	<script src="scripts/bayes-calc-so.js"></script>
-	<!--<<script data-main="scripts/main" src="scripts/require-jquery.js"></script>-->
+	<!--<script src="scripts/bayes-calc-so.js"></script>-->
+	<script data-main="scripts/main" src="scripts/require.js"></script>
 	<style type="text/css">
 		body{
 			font-family: tahoma, arial, sans-serif;
@@ -17,7 +17,7 @@
 	<pre>
 &lt;div class="bayes-calc" data-config='{"type": "simple"}'&gt;&lt;/div&gt;
 	</pre>
-	<div class="bayes-calc" data-config='{"type": "simple"}'></div>
+	<div class="bayes-calc" data-config='{"type": "simple", "graph": true}'></div>
 	<h1>Full with equation</h1>
 	<pre>
 &lt;div class="bayes-calc" data-config='{"type": "full"}'&gt;&lt;/div&gt;

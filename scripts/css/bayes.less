@@ -7,6 +7,45 @@
 	display: none;
 }
 
+.bayes-graph{
+	font-size: 12px;
+	.hypotheses{
+		rect {
+			stroke: white;
+			fill: steelblue;
+		}
+		text.bar{
+			fill: white;
+		}
+		text.rule{
+			fill: steelblue;
+		}
+	}
+	.expected-evidence{
+		rect {
+			stroke: white;
+			fill: magenta;
+		}
+		text.bar{
+			fill: white;
+		}
+		text.rule{
+			fill: magenta;
+		}		
+	}
+	.posteriors{
+		rect {
+			stroke: white;
+			fill: lightseagreen;
+		}
+		text.bar{
+			fill: white;
+		}
+		text.rule{
+			fill: lightseagreen;
+		}		
+	}
+}
 .bayes{
 
 	box-sizing: border-box;

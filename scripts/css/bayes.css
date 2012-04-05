@@ -1,4 +1,13 @@
 .ie .bayes .bayes-range{display:none;}
+.bayes-graph{font-size:12px;}.bayes-graph .hypotheses rect{stroke:white;fill:steelblue;}
+.bayes-graph .hypotheses text.bar{fill:white;}
+.bayes-graph .hypotheses text.rule{fill:steelblue;}
+.bayes-graph .expected-evidence rect{stroke:white;fill:magenta;}
+.bayes-graph .expected-evidence text.bar{fill:white;}
+.bayes-graph .expected-evidence text.rule{fill:magenta;}
+.bayes-graph .posteriors rect{stroke:white;fill:lightseagreen;}
+.bayes-graph .posteriors text.bar{fill:white;}
+.bayes-graph .posteriors text.rule{fill:lightseagreen;}
 .bayes{box-sizing:border-box;font-family:tahoma,arial,sans-serif;font-size:14px;}.bayes *{box-sizing:border-box;margin:0;padding:0;font-size:100%;font:inherit;vertical-align:baseline;}
 .bayes form fieldset{border:0;}
 .bayes form legend{text-shadow:1px 1px 1px #fff;font-weight:bold;font-size:16px;line-height:24px;padding:0px 0 20px 0;}
