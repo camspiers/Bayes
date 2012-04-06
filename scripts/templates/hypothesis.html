@@ -22,11 +22,7 @@
           <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
           <% } %>
         </div>
-      <% } else if (field.type == 'checkbox') { %>
-        <div class="inputs">
-          <input type="checkbox" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" value="<%= field.val %>" <%= field.checked ? 'checked="checked"' : '' %>/>
-        </div>
-      <% } /* end if */ %>
+      <% } %>
     <% } else { %>
       <div class="inputs">
         <% if (field.type == 'number') { %>
@@ -37,11 +33,9 @@
           <span><%= field.val %></span>
           <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
           <% } %>
-        <% } else if (field.type == 'checkbox') { %>
-          <input type="checkbox" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" value="<%= field.val %>" <%= field.checked ? 'checked="checked"' : '' %>/>
-        <% } /* end if */ %>
+        <% } %>
       </div>
-    <% } /* end if */ %>
+    <% } %>
   </div>
   <% }); %>
 </fieldset>
