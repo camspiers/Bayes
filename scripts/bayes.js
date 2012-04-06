@@ -505,15 +505,16 @@ define([
 			graph_data: function (class_name) {
 				
 				var raw = self.data();
-				// console.log(raw);
 
-				var data = [];
+				var data = [],
+				labels = [];
 
 				switch (class_name) {
 
 					case 'hypotheses':
 						if (self.config.num == 1) {
 							data = [raw['hb_1'], raw['nhb_1']];
+							labels = ['Pr(H|b)', 'Pr(¬H|b)'];
 						}
 						break;
 
@@ -524,26 +525,30 @@ define([
 							} else {
 								data = [raw['ehb_1'], raw['enhb_1']];
 							}
+							labels = ['Pr(E|H)', 'Pr(E|¬H)'];
 						}
 						break;
 
 					case 'posteriors':
 						if (self.config.num == 1) {
 							data = [raw['heb_1'], 1 - raw['heb_1']];
+							labels = ['Pr(H|E.b)', 'Pr(¬H|E.b)'];
 						}
 						break;
 
 				}
 
-				return _.map(data, function (val) {
+				return [_.map(data, function (val) {
 					return self.round(val, 2);
-				});
+				}), labels];
 
 			},
 
 			graph: function (class_name) {
 
-				var data = self.graph_data(class_name),
+				var data_labels = self.graph_data(class_name),
+				data = data_labels[0],
+				labels = data_labels[1],
 				markers = [0, 0.25, 0.5, 0.75, 1],
 				width = 400,
 				height = 100;
@@ -597,13 +602,25 @@ define([
 					.attr("text-anchor", "end") // text-align: right
 					.text(String);
 
+				chart.selectAll(".eq")
+					.data(labels)
+					.enter().append("text")
+					.attr("class", "eq")
+					.attr("x", 0)
+					.attr("dx", 3) // padding-left
+					.attr("y", function(d, i) { return i * (height / data.length) + (height / data.length / 2); } )
+					.attr("dy", ".35em") // vertical-align: middle
+					.attr("text-anchor", "start") // text-align: right
+					.text(String);
+
 			},
 
 			graph_redraw: function (class_name) {
 
 				var chart = d3.select(self.config.el.find(".bayes-graph ." + class_name).get(0));
 
-				var data = self.graph_data(class_name);
+				var data_labels = self.graph_data(class_name),
+				data = data_labels[0];
 
 				chart.selectAll("rect")
 					.data(data)
