@@ -86,6 +86,12 @@ define([
 
 				}
 
+				if (_.isBoolean(self.config.graph) && self.config.graph) {
+
+					self.config.graph = 'bar';
+
+				}
+
 				self.render();
 
 			},
@@ -114,9 +120,7 @@ define([
 
 						if (self.config.graph) {
 
-							self.graph('hypotheses');
-							self.graph('expected-evidence');
-							self.graph('posteriors');
+							self.graph();
 
 						}
 
@@ -350,7 +354,7 @@ define([
 						name: 'ehb',
 						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
 						className: 'ehb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
 						disabled: false,
 						type: 'number'
@@ -359,7 +363,7 @@ define([
 						name: 'ehb',
 						label: '\\(\\mathrm{\\Pr( E \\mid H.b )}\\)',
 						className: 'ehb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
 						disabled: false,
 						type: 'number'
@@ -377,7 +381,7 @@ define([
 						name: 'enhb',
 						label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}.b )}\\)',
 						className: 'enhb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
 						disabled: false,
 						type: 'number'
@@ -385,7 +389,7 @@ define([
 						name: 'enhb',
 						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
 						className: 'enhb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
 						disabled: false,
 						type: 'number'
@@ -507,14 +511,15 @@ define([
 				var raw = self.data();
 
 				var data = [],
-				labels = [];
+				labels = [],
+				not = "¬";
 
 				switch (class_name) {
 
 					case 'hypotheses':
 						if (self.config.num == 1) {
 							data = [raw['hb_1'], raw['nhb_1']];
-							labels = ['Pr(H|b)', 'Pr(¬H|b)'];
+							labels = ['Pr(H|b)', 'Pr(' + not + 'H|b)'];
 						}
 						break;
 
@@ -525,14 +530,14 @@ define([
 							} else {
 								data = [raw['ehb_1'], raw['enhb_1']];
 							}
-							labels = ['Pr(E|H)', 'Pr(E|¬H)'];
+							labels = ['Pr(E|H)', 'Pr(E|' + not + 'H)'];
 						}
 						break;
 
 					case 'posteriors':
 						if (self.config.num == 1) {
 							data = [raw['heb_1'], 1 - raw['heb_1']];
-							labels = ['Pr(H|E.b)', 'Pr(¬H|E.b)'];
+							labels = ['Pr(H|E.b)', 'Pr(' + not + 'H|E.b)'];
 						}
 						break;
 
@@ -544,14 +549,130 @@ define([
 
 			},
 
-			graph: function (class_name) {
+			graph: function () {
+
+				switch (self.config.graph) {
+
+					case 'bar':
+						self.graph_bar('hypotheses');
+						self.graph_bar('expected-evidence');
+						self.graph_bar('posteriors');
+						break;
+
+					case 'circle':
+						self.graph_circle();
+						break;
+
+				}
+
+			},
+
+			graph_circle: function () {
+
+				var hypotheses_data_labels = self.graph_data('hypotheses'),
+					expected_data_labels = self.graph_data('expected-evidence'),
+					posteriors_data_labels = self.graph_data('posteriors'),
+					width = 400,
+					height = 400,
+					width_div = width / 3,
+					height_div = height / hypotheses_data_labels[0].length,
+					max_r = Math.min(width_div, height_div);
+
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
+					.append("svg")
+					.attr("width", width)
+					.attr("height", height);
+
+				chart.selectAll(".circle-hypotheses")
+					.data(hypotheses_data_labels[0])
+					.enter().append("circle")
+					.attr('class', function (v, i) {
+						return 'circle-hypotheses circle-hypotheses-' + i;
+					})
+					.attr("cx", width_div - (width_div / 2))
+					.attr("cy", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2);
+					})
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (max_r / 2) * 0.75; 
+					});
+
+				chart.selectAll(".prior-label")
+					.data(hypotheses_data_labels[0])
+					.enter().append("text")
+					.attr("class", "prior-label")
+					.attr("x", width_div - (width_div / 2))
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2);
+					})
+					.attr("dy", ".35em")
+					.attr("text-anchor", "middle")
+					.text(function (v) {
+						return String(self.round(v * 100, 2)) + '%';
+					});
+
+				var expected_start = 0.15 * height,
+					expected_height = 0.70 * height,
+					expected_heights = [],
+					expected_sum = _.reduce(expected_data_labels[0], function (mem, v) {
+						return mem + v;
+					});
+
+				_.each(expected_data_labels[0], function (v) {
+					expected_heights.push( expected_sum ? (v / expected_sum) * expected_height : 0);
+				});
+
+				chart.selectAll(".circle-expecteds")
+					.data(expected_data_labels[0])
+					.enter().append("rect")
+					.attr('class', function (v, i) {
+						return 'circle-expecteds circle-expected-' + i;
+					})
+					.attr("x", (width_div * 2) - (width_div / 2) - 10)
+					.attr("y", function (v, i) {
+						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+					})
+					.attr("width", 20)
+					.attr("height", function (v, i) { return expected_heights[i]; });
+
+				chart.selectAll(".circle-posterior")
+					.data(posteriors_data_labels[0])
+					.enter().append("circle")
+					.attr('class', function (v, i) {
+						return 'circle-posterior circle-posterior-' + i;
+					})
+					.attr("cx", (width_div * 3) - (width_div / 2))
+					.attr("cy", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2);
+					})
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (max_r / 2) * 0.75;
+					});
+
+				chart.selectAll(".post-label")
+					.data(posteriors_data_labels[0])
+					.enter().append("text")
+					.attr("class", "post-label")
+					.attr("x", (width_div * 3) - (width_div / 2))
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2);
+					})
+					.attr("dy", ".35em")
+					.attr("text-anchor", "middle")
+					.text(function (v) {
+						return String(self.round(v * 100, 2)) + '%';
+					});
+
+			},
+
+			graph_bar: function (class_name) {
 
 				var data_labels = self.graph_data(class_name),
-				data = data_labels[0],
-				labels = data_labels[1],
-				markers = [0, 0.25, 0.5, 0.75, 1],
-				width = 400,
-				height = 100;
+					data = data_labels[0],
+					labels = data_labels[1],
+					markers = [0, 0.25, 0.5, 0.75, 1],
+					width = 400,
+					height = 100;
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
 					.append("svg")
@@ -615,7 +736,87 @@ define([
 
 			},
 
-			graph_redraw: function (class_name) {
+			graph_redraw: function () {
+
+				switch (self.config.graph) {
+
+					case 'bar':
+						self.graph_redraw_bar('hypotheses');
+						self.graph_redraw_bar('expected-evidence');
+						self.graph_redraw_bar('posteriors');
+						break;
+
+					case 'circle':
+						self.graph_redraw_circle();
+						break;
+
+				}
+
+			},
+
+			graph_redraw_circle: function () {
+
+				var hypotheses_data_labels = self.graph_data('hypotheses'),
+					expected_data_labels = self.graph_data('expected-evidence'),
+					posteriors_data_labels = self.graph_data('posteriors'),
+					width = 400,
+					height = 400,
+					width_div = width / 3,
+					height_div = height / hypotheses_data_labels[0].length,
+					max_r = Math.min(width_div, height_div);
+
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
+
+				chart.selectAll(".circle-hypotheses")
+					.data(hypotheses_data_labels[0])
+					.transition()
+					.duration(1000)
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (max_r / 2) * 0.75;
+					});
+
+				chart.selectAll(".prior-label")
+					.data(hypotheses_data_labels[0])
+					.text(function (v) {
+						return String(self.round(v * 100, 2)) + '%';
+					});
+
+				var expected_start = 0.15 * height,
+					expected_height = 0.70 * height,
+					expected_heights = [],
+					expected_sum = _.reduce(expected_data_labels[0], function (mem, v) {
+						return mem + v;
+					});
+
+				_.each(expected_data_labels[0], function (v) {
+					expected_heights.push( expected_sum ? (v / expected_sum) * expected_height : 0);
+				});
+
+				chart.selectAll(".circle-expecteds")
+					.data(expected_data_labels[0])
+					.transition()
+					.attr("y", function (v, i) {
+						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+					})
+					.attr("height", function (v, i) { return expected_heights[i]; });
+
+				chart.selectAll(".circle-posterior")
+					.data(posteriors_data_labels[0])
+					.transition()
+					.duration(1000)
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (max_r / 2) * 0.75;
+					});
+
+				chart.selectAll(".post-label")
+					.data(posteriors_data_labels[0])
+					.text(function (v) {
+						return String(self.round(v * 100, 2)) + '%';
+					});
+
+			},
+
+			graph_redraw_bar: function (class_name) {
 
 				var chart = d3.select(self.config.el.find(".bayes-graph ." + class_name).get(0));
 

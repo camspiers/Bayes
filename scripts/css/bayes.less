@@ -114,8 +114,8 @@
 		font-size: 12px;
 		width: 420px;
 		margin-left: 20px;
-		text.bar, text.eq{
-			fill: white;
+		text.bar, text.label, text.prior-label, text.post-label, text.eq{
+			fill: black;
 		}
 		.hypotheses{
 			rect {
@@ -143,6 +143,19 @@
 			text.rule{
 				fill: lightseagreen;
 			}		
+		}
+		.circle-expecteds,.circle-hypotheses,.circle-posterior{
+			fill: steelblue;
+			stroke: white;
+		}
+		.circle-expected-0,.circle-hypotheses-0,.circle-posterior-0{
+			fill: steelblue;
+		}
+		.circle-expected-1,.circle-hypotheses-1,.circle-posterior-1{
+			fill: magenta;
+		}
+		.circle-expected-2,.circle-hypotheses-2,.circle-posterior-2{
+			fill: lightseagreen;
 		}
 	}
 
