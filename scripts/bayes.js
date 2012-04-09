@@ -16,16 +16,16 @@ define([
 	//hypothesis: hypothesis template
 	//style: less styles
 
-	if (!_.isUndefined(MathJax)) {
+	// if (!_.isUndefined(MathJax)) {
 
-		MathJax.Hub.Config({displayAlign: "left"});
+	// 	MathJax.Hub.Config({displayAlign: "left"});
 
-	} else {
+	// } else {
 
-		var MathJax= false;
-		console.log('math jax not found');
+	// 	var MathJax= false;
+	// 	console.log('math jax not found');
 
-	}
+	// }
 	
 	return function() {
 
@@ -116,7 +116,7 @@ define([
 
 					if (self.config.el.length) {
 
-						self.config.el.html(self.template('bayes'));
+						self.config.el.hide().html(self.template('bayes'));
 
 						if (self.config.graph) {
 
@@ -124,7 +124,13 @@ define([
 
 						}
 
-						if (MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
+						MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
+							MathJax.Callback.Queue(
+								["Config", MathJax.Hub, {displayAlign: "left"}],
+								["Queue", MathJax.Hub, ["Typeset", MathJax.Hub, self.config.el.get(0)]],
+								["fadeIn", self.config.el]
+							);
+						});
 
 						//Attach events
 						self.events();
