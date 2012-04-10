@@ -390,7 +390,7 @@ define([
 						name: 'heb',
 						label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid E.b )}\\)',
 						className: 'heb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
 						disabled: true,
 						type: 'number'
@@ -399,7 +399,7 @@ define([
 						name: 'heb',
 						label: '\\(\\mathrm{\\Pr( H \\mid E.b )}\\)',
 						className: 'heb',
-						val: 0,
+						val: 0.5,
 						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
 						disabled: true,
 						type: 'number'
@@ -569,6 +569,7 @@ define([
 					height = 400,
 					width_div = width / 3,
 					height_div = height / hypotheses_data_labels[0].length,
+					r_factor = 0.85,
 					max_r = Math.min(width_div, height_div);
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
@@ -587,7 +588,7 @@ define([
 						return (height_div * (i + 1)) - (height_div / 2);
 					})
 					.attr("r", function (v) {
-						return Math.sqrt(v) * (max_r / 2) * 0.75; 
+						return Math.sqrt(v) * (max_r / 2) * r_factor; 
 					});
 
 				chart.selectAll(".prior-label")
@@ -639,7 +640,7 @@ define([
 						return (height_div * (i + 1)) - (height_div / 2);
 					})
 					.attr("r", function (v) {
-						return Math.sqrt(v) * (max_r / 2) * 0.75;
+						return Math.sqrt(v) * (max_r / 2) * r_factor;
 					});
 
 				chart.selectAll(".post-label")
@@ -756,6 +757,7 @@ define([
 					height = 400,
 					width_div = width / 3,
 					height_div = height / hypotheses_data_labels[0].length,
+					r_factor = 0.85,
 					max_r = Math.min(width_div, height_div);
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
@@ -765,7 +767,7 @@ define([
 					.transition()
 					.duration(1000)
 					.attr("r", function (v) {
-						return Math.sqrt(v) * (max_r / 2) * 0.75;
+						return Math.sqrt(v) * (max_r / 2) * r_factor;
 					});
 
 				chart.selectAll(".prior-label")
@@ -798,7 +800,7 @@ define([
 					.transition()
 					.duration(1000)
 					.attr("r", function (v) {
-						return Math.sqrt(v) * (max_r / 2) * 0.75;
+						return Math.sqrt(v) * (max_r / 2) * r_factor;
 					});
 
 				chart.selectAll(".post-label")
