@@ -162,7 +162,36 @@ define([
 
 			},
 
+			constrain_data: function () {
+
+				if (self.config.type == 'simple') {
+
+					var data = self.data(),
+					min = parseFloat(data['hb_1']) * parseFloat(data['ehb_1']),
+					max = min + parseFloat(data['nhb_1']),
+					$inputs = self.config.el.find('.field-eb .inputs:eq(0) input');
+
+					if (parseFloat(data['eb_1']) < min) {
+
+						$inputs.val(min);
+
+					}
+
+					if (parseFloat(data['eb_1']) > max) {
+
+						$inputs.val(max);
+
+					}
+
+					$inputs.attr('min', self.round(min, 2)).attr('max', self.round(max, 2));
+
+				}
+
+			},
+
 			update_calc: function () {
+
+				self.constrain_data();
 
 				var data = self.data();
 
@@ -185,9 +214,12 @@ define([
 
 					for (var i = 0; i < self.config.num; i++) {
 
-						self.config.el.find('.field-heb .inputs:eq(' + i + ') span').text(self.round(self.calculate(_.sortBy(calc, function (val, index) {
+						var val = self.round(self.calculate(_.sortBy(calc, function (val, index) {
 							return index == i ? 0 : 1;
-						})), 2));
+						})), 2);
+
+						self.config.el.find('.field-heb .inputs:eq(' + i + ') span').text(val);
+						self.config.el.find('.field-heb .inputs:eq(' + i + ') input').val(val);
 
 					}
 
@@ -513,6 +545,11 @@ define([
 						if (self.config.num == 1) {
 							data = [raw['hb_1'], raw['nhb_1']];
 							labels = ['Pr(H|b)', 'Pr(' + not + 'H|b)'];
+						} else {
+							for (var i = 1; i <= self.config.num; i++) {
+								data.push(raw['hb_' + i]);
+								labels.push('Pr(H' + i + '|b)');
+							}
 						}
 						break;
 
@@ -524,6 +561,11 @@ define([
 								data = [raw['ehb_1'], raw['enhb_1']];
 							}
 							labels = ['Pr(E|H)', 'Pr(E|' + not + 'H)'];
+						} else {
+							for (var i = 1; i <= self.config.num; i++) {
+								data.push(raw['ehb_' + i]);
+								labels.push('Pr(E|H' + i + '.b)');
+							}
 						}
 						break;
 
@@ -531,6 +573,11 @@ define([
 						if (self.config.num == 1) {
 							data = [raw['heb_1'], 1 - raw['heb_1']];
 							labels = ['Pr(H|E.b)', 'Pr(' + not + 'H|E.b)'];
+						} else {
+							for (var i = 1; i <= self.config.num; i++) {
+								data.push(raw['heb_' + i]);
+								labels.push('Pr(H' + i + '|E.b)');
+							}
 						}
 						break;
 
@@ -599,11 +646,23 @@ define([
 					.attr("y", function (v, i) {
 						return (height_div * (i + 1)) - (height_div / 2);
 					})
-					.attr("dy", ".35em")
+					.attr("dy", "0.35em")
 					.attr("text-anchor", "middle")
 					.text(function (v) {
 						return String(self.round(v * 100, 2)) + '%';
 					});
+
+				chart.selectAll(".prior-eq-label")
+					.data(hypotheses_data_labels[1])
+					.enter().append("text")
+					.attr("class", "prior-eq-label")
+					.attr("x", width_div - (width_div / 2))
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2) - (Math.sqrt(hypotheses_data_labels[0][i]) * (max_r / 2) * r_factor);
+					})
+					.attr("dy", "-0.5em")
+					.attr("text-anchor", "middle")
+					.text(String);
 
 				var expected_start = 0.15 * height,
 					expected_height = 0.70 * height,
@@ -622,12 +681,34 @@ define([
 					.attr('class', function (v, i) {
 						return 'circle-expecteds circle-expected-' + i;
 					})
-					.attr("x", (width_div * 2) - (width_div / 2) - 10)
+					.attr("x", (width_div * 2) - (width_div / 2) - 30)
 					.attr("y", function (v, i) {
 						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
 					})
-					.attr("width", 20)
+					.attr("width", 60)
 					.attr("height", function (v, i) { return expected_heights[i]; });
+
+				chart.selectAll(".expected-main-label")
+					.data(['likelihood ratios'])
+					.enter().append("text")
+					.attr("class", "expected-main-label")
+					.attr("x", (width_div * 2) - (width_div / 2))
+					.attr("y", expected_start)
+					.attr("dy", "-10px")
+					.attr("text-anchor", "middle")
+					.text(String);
+
+				chart.selectAll(".expected-label")
+					.data(expected_data_labels[1])
+					.enter().append("text")
+					.attr("class", "expected-label")
+					.attr("x", (width_div * 2) - (width_div / 2))
+					.attr("y", function (v, i) {
+						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+					})
+					.attr("dy", "20px")
+					.attr("text-anchor", "middle")
+					.text(String);
 
 				chart.selectAll(".circle-posterior")
 					.data(posteriors_data_labels[0])
@@ -656,6 +737,18 @@ define([
 					.text(function (v) {
 						return String(self.round(v * 100, 2)) + '%';
 					});
+
+				chart.selectAll(".post-eq-label")
+					.data(posteriors_data_labels[1])
+					.enter().append("text")
+					.attr("class", "post-eq-label")
+					.attr("x", (width_div * 3) - (width_div / 2))
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2) - (Math.sqrt(posteriors_data_labels[0][i]) * (max_r / 2) * r_factor);
+					})
+					.attr("dy", "-0.5em")
+					.attr("text-anchor", "middle")
+					.text(String);
 
 			},
 
@@ -776,6 +869,14 @@ define([
 						return String(self.round(v * 100, 2)) + '%';
 					});
 
+				chart.selectAll(".prior-eq-label")
+					.data(hypotheses_data_labels[1])
+					.transition()
+					.duration(1000)
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2) - (Math.sqrt(hypotheses_data_labels[0][i]) * (max_r / 2) * r_factor);
+					})
+
 				var expected_start = 0.15 * height,
 					expected_height = 0.70 * height,
 					expected_heights = [],
@@ -795,6 +896,13 @@ define([
 					})
 					.attr("height", function (v, i) { return expected_heights[i]; });
 
+				chart.selectAll(".expected-label")
+					.data(expected_data_labels[1])
+					.transition()
+					.attr("y", function (v, i) {
+						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+					});
+
 				chart.selectAll(".circle-posterior")
 					.data(posteriors_data_labels[0])
 					.transition()
@@ -808,6 +916,14 @@ define([
 					.text(function (v) {
 						return String(self.round(v * 100, 2)) + '%';
 					});
+
+				chart.selectAll(".post-eq-label")
+					.data(posteriors_data_labels[1])
+					.transition()
+					.duration(1000)
+					.attr("y", function (v, i) {
+						return (height_div * (i + 1)) - (height_div / 2) - (Math.sqrt(posteriors_data_labels[0][i]) * (max_r / 2) * r_factor);
+					})
 
 			},
 
