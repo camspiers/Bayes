@@ -5,16 +5,11 @@ define([
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
 	"text!./css/bayes.css",
+	"../scripts/modernizr-custom.js",
 	"../scripts/jquery.tools.min.js",
 	"../scripts/html5slider.js",
 	"../scripts/d3.v2.min.js"
 ], function ($, _, bayes, hypothesis, style) {
-
-	//$: jQuery
-	//_: underscore
-	//bayes: bayes main template
-	//hypothesis: hypothesis template
-	//style: less styles
 
 	return function() {
 
@@ -22,7 +17,7 @@ define([
 
 			config: {
 
-				type: "simple", //options ["simple", "full"]
+				type: "simple",
 				selector: false,
 				el: false,
 				templates: {
@@ -35,7 +30,8 @@ define([
 				css: {
 					// width: "500px"
 				},
-				graph: false
+				graph: false,
+				styleSelector: "bayes-calc-styles"
 
 			},
 
@@ -91,7 +87,7 @@ define([
 
 				//Render css
 
-				if (!$('#bayes-calc-styles').length) {
+				if (!$('#' + self.config.styleSelector).length) {
 
 					self.css(style);
 
@@ -109,11 +105,20 @@ define([
 
 						self.config.el.hide().html(self.template('bayes'));
 
+						if (!Modernizr.inputtypes.range && !$.browser.mozilla) {
+
+							self.config.el.addClass('no-range');
+
+						}
+
 						if (self.config.graph) {
 
 							self.graph();
 
 						}
+
+						//Attach events
+						self.events();
 
 						MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
 							MathJax.Hub.Config({displayAlign: "left"});
@@ -121,18 +126,7 @@ define([
 							MathJax.Hub.Queue(["fadeIn", self.config.el]);
 						});
 
-						//Attach events
-						self.events();
-
-					} else {
-
-						self.error('Not configured correctly');
-
 					}
-
-				} else {
-
-					self.error('Not configured correctly');
 
 				}
 
@@ -142,17 +136,17 @@ define([
 
 				var $form = self.config.el.find('form');
 
-				$form.delegate('input[type=range]', 'change', function() {
-					self.sync_fields($(this), 'number');
+				$form.find('input[type=range]').change(function() {
+					self.sync_range_fields($(this), 'number');
 					self.update_calc();
 				});
 
-				$form.delegate('input[type=number]', 'change', function() {
-					self.sync_fields($(this), 'range');
+				$form.find('input[type=number]').change(function() {
+					self.sync_range_fields($(this), 'range');
 					self.update_calc();
 				});
 
-				$form.delegate('label[title],input[title],button[title]', 'mouseover', function() {
+				$form.find('label[title],input[title],button[title]').mouseover(function() {
 					var $this = $(this);
 					if (!$this.data("tooltip")) {
 						$this.tooltip({
@@ -161,6 +155,50 @@ define([
 						}).trigger('mouseover');
 					}
 				});
+
+				if (self.config.num > 2) {
+
+					var $hypotheses = $form.find('.field-hb input[type=number]'),
+					hypotheses = $hypotheses.toArray(),
+					sum =  function (mem, el) {
+						return mem + parseFloat($(el).val());
+					};
+
+					$hypotheses.bind('change bayes-change', function () {
+
+						if (_.reduce(hypotheses, sum, 0) != 1) {
+							var $this = $(this),
+							$not = $hypotheses.not($this),
+							not_sum = _.reduce($not.toArray(), sum, 0),
+							left = 1 - parseFloat($this.val());
+							$not.each(function () {
+								var $this = $(this);
+								$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / not_sum) * left, 2));
+							});
+
+						}
+
+					});
+
+				}
+
+			},
+
+			sync_range_fields: function($this, type) {
+
+				var $field = $this.closest('.field'),
+				$fields = $field.siblings('.field'),
+				$inputs = $field.find('.inputs'),
+				$input = $this.closest('.inputs'),
+				i = $inputs.index($input);
+				$this.siblings('input[type=' + type + ']').val($this.val()).trigger('bayes-change');
+				
+				if ($field.hasClass('field-hb')) {
+					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+				}
+				if ($field.hasClass('field-nhb')) {
+					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+				}
 
 			},
 
@@ -307,24 +345,6 @@ define([
 
 			},
 
-			sync_fields: function($this, type) {
-
-				var $field = $this.closest('.field'),
-				$fields = $field.siblings('.field'),
-				$inputs = $field.find('.inputs'),
-				$input = $this.closest('.inputs'),
-				i = $inputs.index($input);
-				$this.siblings('input[type=' + type + ']').val($this.val());
-				
-				if ($field.hasClass('field-hb')) {
-					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
-				}
-				if ($field.hasClass('field-nhb')) {
-					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
-				}
-
-			},
-
 			data: function () {
 
 				var data = {};
@@ -355,7 +375,7 @@ define([
 					{
 						alias: 'hb single',
 						name: 'hb',
-						label: '\\(\\mathrm{\\Pr( H \\mid b )}\\)',
+						label: '\\(\\mathrm{\P( H \\mid b )}\\)',
 						className: 'hb',
 						val: 0.5,
 						title: 'Probability that the hypothesis is true given the background evidence',
@@ -363,7 +383,7 @@ define([
 						type: 'number' 
 					}, {
 						name: 'hb',
-						label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid b )}\\)',
+						label: '\\(\\mathrm{\P( H_<%= num %> \\mid b )}\\)',
 						className: 'hb',
 						val: 0.5,
 						title: 'Probability that the hypothesis is true given the background evidence',
@@ -371,7 +391,7 @@ define([
 						type: 'number' 
 					}, {
 						name: 'nhb',
-						label: '\\(\\mathrm{\\Pr( \\neg{H} \\mid b )}\\)',
+						label: '\\(\\mathrm{\P( \\neg{H} \\mid b )}\\)',
 						className: 'nhb',
 						val: 0.5,
 						title: 'Probability that the hypothesis is false given the background evidence',
@@ -379,7 +399,7 @@ define([
 						type: 'number'
 					}, {
 						name: 'ehb',
-						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
+						label: '\\(\\mathrm{\P( E \\mid H_<%= num %>.b )}\\)',
 						className: 'ehb',
 						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
@@ -388,7 +408,7 @@ define([
 					}, {
 						alias: 'ehb single',
 						name: 'ehb',
-						label: '\\(\\mathrm{\\Pr( E \\mid H.b )}\\)',
+						label: '\\(\\mathrm{\P( E \\mid H.b )}\\)',
 						className: 'ehb',
 						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is true and the background evidence',
@@ -396,7 +416,7 @@ define([
 						type: 'number'
 					}, {
 						name: 'eb',
-						label: '\\(\\mathrm{\\Pr( E \\mid b )}\\)',
+						label: '\\(\\mathrm{\P( E \\mid b )}\\)',
 						className: 'eb',
 						val: 0,
 						title: 'Probability that the evidence is true given the background evidence',
@@ -406,7 +426,7 @@ define([
 					}, {
 						alias: 'enhb single',
 						name: 'enhb',
-						label: '\\(\\mathrm{\\Pr( E \\mid \\neg{H}.b )}\\)',
+						label: '\\(\\mathrm{\P( E \\mid \\neg{H}.b )}\\)',
 						className: 'enhb',
 						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
@@ -414,7 +434,7 @@ define([
 						type: 'number'
 					}, {
 						name: 'enhb',
-						label: '\\(\\mathrm{\\Pr( E \\mid H_<%= num %>.b )}\\)',
+						label: '\\(\\mathrm{\P( E \\mid H_<%= num %>.b )}\\)',
 						className: 'enhb',
 						val: 0.5,
 						title: 'Probability that the evidence is true given that the hypothesis is false and the background evidence',
@@ -422,7 +442,7 @@ define([
 						type: 'number'
 					}, {
 						name: 'heb',
-						label: '\\(\\mathrm{\\Pr( H_<%= num %> \\mid E.b )}\\)',
+						label: '\\(\\mathrm{\P( H_<%= num %> \\mid E.b )}\\)',
 						className: 'heb',
 						val: 0.5,
 						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
@@ -431,7 +451,7 @@ define([
 					}, {
 						alias: 'heb single',
 						name: 'heb',
-						label: '\\(\\mathrm{\\Pr( H \\mid E.b )}\\)',
+						label: '\\(\\mathrm{\P( H \\mid E.b )}\\)',
 						className: 'heb',
 						val: 0.5,
 						title: 'Probability that the hypothesis is true given that the evidence is true and the background evidence',
@@ -500,29 +520,29 @@ define([
 
 				if (self.config.num == 1) {
 
-					var left = '\\Pr( H \\mid E.b )',
-					numerator = '\\Pr( H \\mid b ) \\Pr( E \\mid H.b )',
+					var left = '\P( H \\mid E.b )',
+					numerator = '\P( H \\mid b ) \P( E \\mid H.b )',
 					denominator = [];
 
 					if (self.config.type == 'simple') {
 
-						denominator.push('\\Pr( E \\mid b )');
+						denominator.push('\P( E \\mid b )');
 
 					} else {
 
-						denominator.push('\\Pr( H \\mid b ) \\Pr( E \\mid H.b )');
-						denominator.push('\\Pr(\\neg{H} \\mid b ) \\Pr( E \\mid \\neg{H}.b )');
+						denominator.push('\P( H \\mid b ) \P( E \\mid H.b )');
+						denominator.push('\P(\\neg{H} \\mid b ) \P( E \\mid \\neg{H}.b )');
 
 					}
 
 				} else {
 
-					left = '\\Pr( H_1 \\mid E.b )';
-					numerator = '\\Pr( H_1 \\mid b )Pr( E \\mid H_1.b )';
+					left = '\P( H_1 \\mid E.b )';
+					numerator = '\P( H_1 \\mid b )P( E \\mid H_1.b )';
 
 					for (var i = 1; i <= self.config.num; i++) {
 
-						denominator.push('\\Pr( H_' + i + ' \\mid b ) \\Pr( E \\mid H_' + i + '.b )');
+						denominator.push('\P( H_' + i + ' \\mid b ) \P( E \\mid H_' + i + '.b )');
 
 					}
 
@@ -546,11 +566,11 @@ define([
 					case 'hypotheses':
 						if (self.config.num == 1) {
 							data = [raw['hb_1'], raw['nhb_1']];
-							labels = ['Pr(H|b)', 'Pr(' + not + 'H|b)'];
+							labels = ['P(H|b)', 'P(' + not + 'H|b)'];
 						} else {
 							for (var i = 1; i <= self.config.num; i++) {
 								data.push(raw['hb_' + i]);
-								labels.push('Pr(H' + i + '|b)');
+								labels.push('P(H' + i + '|b)');
 							}
 						}
 						break;
@@ -562,11 +582,11 @@ define([
 							} else {
 								data = [raw['ehb_1'], raw['enhb_1']];
 							}
-							labels = ['Pr(E|H)', 'Pr(E|' + not + 'H)'];
+							labels = ['P(E|H)', 'P(E|' + not + 'H)'];
 						} else {
 							for (var i = 1; i <= self.config.num; i++) {
 								data.push(raw['ehb_' + i]);
-								labels.push('Pr(E|H' + i + '.b)');
+								labels.push('P(E|H' + i + '.b)');
 							}
 						}
 						break;
@@ -574,11 +594,11 @@ define([
 					case 'posteriors':
 						if (self.config.num == 1) {
 							data = [raw['heb_1'], 1 - raw['heb_1']];
-							labels = ['Pr(H|E.b)', 'Pr(' + not + 'H|E.b)'];
+							labels = ['P(H|E.b)', 'P(' + not + 'H|E.b)'];
 						} else {
 							for (var i = 1; i <= self.config.num; i++) {
 								data.push(raw['heb_' + i]);
-								labels.push('Pr(H' + i + '|E.b)');
+								labels.push('P(H' + i + '|E.b)');
 							}
 						}
 						break;
@@ -961,7 +981,7 @@ define([
 
 				style = document.createElement('style');
 				style.type = 'text/css';
-				style.id = "bayes-calc-styles";
+				style.id = self.config.styleSelector;
 
 				if (style.styleSheet) {
 
@@ -974,12 +994,6 @@ define([
 				}
 				
 				document.getElementsByTagName("head")[0].appendChild( style );
-
-			},
-
-			error: function (msg) {
-
-				console.log('Bayes app error: ' + msg);
 
 			}
 
