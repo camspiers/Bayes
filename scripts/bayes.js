@@ -134,17 +134,17 @@ define([
 
 				var $form = self.config.el.find('form');
 
-				$form.delegate('input[type=range]', 'change', function() {
-					self.sync_fields($(this), 'number');
+				$form.find('input[type=range]').change(function() {
+					self.sync_range_fields($(this), 'number');
 					self.update_calc();
 				});
 
-				$form.delegate('input[type=number]', 'change', function() {
-					self.sync_fields($(this), 'range');
+				$form.find('input[type=number]').change(function() {
+					self.sync_range_fields($(this), 'range');
 					self.update_calc();
 				});
 
-				$form.delegate('label[title],input[title],button[title]', 'mouseover', function() {
+				$form.find('label[title],input[title],button[title]').mouseover(function() {
 					var $this = $(this);
 					if (!$this.data("tooltip")) {
 						$this.tooltip({
@@ -153,6 +153,50 @@ define([
 						}).trigger('mouseover');
 					}
 				});
+
+				if (self.config.num > 2) {
+
+					var $hypotheses = $form.find('.field-hb input[type=number]'),
+					hypotheses = $hypotheses.toArray(),
+					sum =  function (mem, el) {
+						return mem + parseFloat($(el).val());
+					};
+
+					$hypotheses.bind('change bayes-change', function () {
+
+						if (_.reduce(hypotheses, sum, 0) != 1) {
+							var $this = $(this),
+							$not = $hypotheses.not($this),
+							not_sum = _.reduce($not.toArray(), sum, 0),
+							left = 1 - parseFloat($this.val());
+							$not.each(function () {
+								var $this = $(this);
+								$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / not_sum) * left, 2));
+							});
+
+						}
+
+					});
+
+				}
+
+			},
+
+			sync_range_fields: function($this, type) {
+
+				var $field = $this.closest('.field'),
+				$fields = $field.siblings('.field'),
+				$inputs = $field.find('.inputs'),
+				$input = $this.closest('.inputs'),
+				i = $inputs.index($input);
+				$this.siblings('input[type=' + type + ']').val($this.val()).trigger('bayes-change');
+				
+				if ($field.hasClass('field-hb')) {
+					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+				}
+				if ($field.hasClass('field-nhb')) {
+					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+				}
 
 			},
 
@@ -295,24 +339,6 @@ define([
 
 					}
 
-				}
-
-			},
-
-			sync_fields: function($this, type) {
-
-				var $field = $this.closest('.field'),
-				$fields = $field.siblings('.field'),
-				$inputs = $field.find('.inputs'),
-				$input = $this.closest('.inputs'),
-				i = $inputs.index($input);
-				$this.siblings('input[type=' + type + ']').val($this.val());
-				
-				if ($field.hasClass('field-hb')) {
-					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
-				}
-				if ($field.hasClass('field-nhb')) {
-					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
 				}
 
 			},
