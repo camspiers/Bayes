@@ -33,7 +33,7 @@ define([
 				num: 1,
 				equation: true,
 				css: {
-					width: "500px"
+					// width: "500px"
 				},
 				graph: false
 
@@ -51,15 +51,17 @@ define([
 
 				}
 
+				if (self.config.num <= 2) {
+
+					self.config.num = 1;
+
+				}
+
 				if (_.isUndefined(config.css) || _.isUndefined(config.css.width)) {
 
 					var width = 500;
 
-					if (self.config.num <= 2) {
-
-						self.config.num = 1;
-
-					} else {
+					if (self.config.num != 1) {
 
 						width = 290 * self.config.num;
 
