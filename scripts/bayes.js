@@ -27,9 +27,7 @@ define([
 				afortiori: false,
 				num: 1,
 				equation: true,
-				css: {
-					// width: "500px"
-				},
+				css: {},
 				graph: false,
 				styleSelector: "bayes-calc-styles"
 
@@ -166,14 +164,31 @@ define([
 
 					$hypotheses.bind('change bayes-change', function () {
 
-						if (_.reduce(hypotheses, sum, 0) != 1) {
+						if (_.reduce(hypotheses, sum, 0) != 1) { //sum is not 1
 							var $this = $(this),
-							$not = $hypotheses.not($this),
-							not_sum = _.reduce($not.toArray(), sum, 0),
-							left = 1 - parseFloat($this.val());
-							$not.each(function () {
+							index = $hypotheses.index($this);
+							
+							if (_.reduce(hypotheses.slice(0, index + 1), sum, 0) > 1){ //Left including
+
+								$this.siblings().andSelf().val(self.round(1 - _.reduce(hypotheses.slice(0, index), sum, 0), 2));
+
+							}
+
+							var $gt = $hypotheses.filter(':gt(' + index + ')'),
+							gt_sum = _.reduce($gt.toArray(), sum, 0),
+							to_fill = 1 - _.reduce(hypotheses.slice(0, index + 1), sum, 0);
+
+							$gt.each(function () {
 								var $this = $(this);
-								$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / not_sum) * left, 2));
+								if (to_fill > 0) {
+									if (parseFloat($this.val()) > 0 && gt_sum > 0) {
+										$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / gt_sum) * to_fill, 2));
+									} else {
+										$this.siblings().andSelf().val(self.round(to_fill, 2));
+									}
+								} else {
+									$this.siblings().andSelf().val(0);
+								}
 							});
 
 						}
@@ -345,11 +360,28 @@ define([
 
 			},
 
+			serializeArray: function($el) {
+				return $el.map(function(){
+					return this.elements ? $.makeArray( this.elements ) : this;
+				})
+				.map(function( i, elem ){
+					var val = $( this ).val();
+
+					return val == null ?
+						null :
+						$.isArray( val ) ?
+							$.map( val, function( val, i ){
+								return { name: elem.name, value: val };
+							}) :
+							{ name: elem.name, value: val };
+				}).get();
+			},
+
 			data: function () {
 
 				var data = {};
 
-				_.each(self.config.el.find('form input[type=number],form input[type=hidden]').serializeArray(), function(obj) {
+				_.each(self.serializeArray(self.config.el.find('form input[type=number],form input[type=hidden]')), function(obj) {
 
 				  if (data.hasOwnProperty(obj.name)) {
 
