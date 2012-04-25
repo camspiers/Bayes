@@ -26,8 +26,11 @@ define([
 				},
 				afortiori: false,
 				num: 1,
+				dp: 2,
 				equation: true,
-				css: {},
+				css: {
+					"display": "none"
+				},
 				graph: false,
 				styleSelector: "bayes-calc-styles"
 
@@ -97,17 +100,17 @@ define([
 
 					self.config.el = self.config.el.length ? self.config.el : $(self.config.selector);
 
-					self.config.el.css(self.config.css);
-
 					if (self.config.el.length) {
 
-						self.config.el.hide().html(self.template('bayes'));
+						self.config.el.css(self.config.css);
 
 						if (!Modernizr.inputtypes.range && !$.browser.mozilla) {
 
 							self.config.el.addClass('no-range');
 
 						}
+
+						self.config.el.html(self.template('bayes'));
 
 						if (self.config.graph) {
 
@@ -118,6 +121,7 @@ define([
 						//Attach events
 						self.events();
 
+						//If mathjax doesn't load then neither does the calc
 						MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
 							MathJax.Hub.Config({displayAlign: "left"});
 							MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
@@ -168,9 +172,9 @@ define([
 							var $this = $(this),
 							index = $hypotheses.index($this);
 							
-							if (_.reduce(hypotheses.slice(0, index + 1), sum, 0) > 1){ //Left including
+							if (_.reduce(hypotheses.slice(0, index + 1), sum, 0) > 1){ //Left of interacted hypothesis including
 
-								$this.siblings().andSelf().val(self.round(1 - _.reduce(hypotheses.slice(0, index), sum, 0), 2));
+								$this.siblings().andSelf().val(self.round(1 - _.reduce(hypotheses.slice(0, index), sum, 0)));
 
 							}
 
@@ -182,9 +186,9 @@ define([
 								var $this = $(this);
 								if (to_fill > 0) {
 									if (parseFloat($this.val()) > 0 && gt_sum > 0) {
-										$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / gt_sum) * to_fill, 2));
+										$this.siblings().andSelf().val(self.round((parseFloat($this.val()) / gt_sum) * to_fill));
 									} else {
-										$this.siblings().andSelf().val(self.round(to_fill, 2));
+										$this.siblings().andSelf().val(self.round(to_fill));
 									}
 								} else {
 									$this.siblings().andSelf().val(0);
@@ -193,10 +197,14 @@ define([
 
 						}
 
-					});
+					}).trigger('change');
 
 				}
 
+			},
+
+			step: function () {
+				return 1 / Math.pow(10, self.config.dp);
 			},
 
 			sync_range_fields: function($this, type) {
@@ -209,10 +217,10 @@ define([
 				$this.siblings('input[type=' + type + ']').val($this.val()).trigger('bayes-change');
 				
 				if ($field.hasClass('field-hb')) {
-					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
 				}
 				if ($field.hasClass('field-nhb')) {
-					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val()), 2));
+					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
 				}
 
 			},
@@ -238,7 +246,7 @@ define([
 
 					}
 
-					$inputs.attr('min', self.round(min, 2)).attr('max', self.round(max, 2));
+					$inputs.attr('min', self.round(min)).attr('max', self.round(max));
 
 				}
 
@@ -271,7 +279,7 @@ define([
 
 						var val = self.round(self.calculate(_.sortBy(calc, function (val, index) {
 							return index == i ? 0 : 1;
-						})), 2);
+						})));
 
 						self.config.el.find('.field-heb .inputs:eq(' + i + ') span').text(val);
 						self.config.el.find('.field-heb .inputs:eq(' + i + ') input').val(val);
@@ -293,7 +301,7 @@ define([
 									heb: data['heb_' + i] ? data['heb_' + i][j] : 0,
 									nhb: data['nhb_' + i] ? data['nhb_' + i][j] : 0,
 									enhb: data['enhb_' + i] ? data['enhb_' + i][j] : 0,
-								}), 2));
+								})));
 
 							}
 
@@ -306,7 +314,7 @@ define([
 								heb: data['heb_' + i],
 								nhb: data['nhb_' + i],
 								enhb: data['enhb_' + i],
-							}), 2);
+							}));
 
 							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(calc);
 							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') input').val(calc);
@@ -319,9 +327,7 @@ define([
 
 				if (self.config.graph) {
 
-					self.graph_redraw('hypotheses');
-					self.graph_redraw('expected-evidence');
-					self.graph_redraw('posteriors');
+					self.graph_redraw();
 
 				}
 
@@ -540,6 +546,10 @@ define([
 
 			round: function(num, dec) {
 
+				if (_.isUndefined(dec)) {
+					dec = self.config.dp;
+				}
+
 				return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
 
 			},
@@ -638,7 +648,7 @@ define([
 				}
 
 				return [_.map(data, function (val) {
-					return self.round(val, 2);
+					return self.round(val);
 				}), labels];
 
 			},
@@ -703,7 +713,7 @@ define([
 					.attr("dy", "0.35em")
 					.attr("text-anchor", "middle")
 					.text(function (v) {
-						return String(self.round(v * 100, 2)) + '%';
+						return String(self.round(v * 100)) + '%';
 					});
 
 				chart.selectAll(".prior-eq-label")

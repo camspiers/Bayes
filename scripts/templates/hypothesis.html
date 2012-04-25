@@ -6,20 +6,20 @@
       <% if (field.type == 'number') { %>
         <div class="inputs">
           <% if (!field.disabled) { %>
-          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
-          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
           <% } else { %>
           <span><%= field.val %></span>
-          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>"/>
           <% } %>
         </div>
         <div class="inputs">
           <% if (!field.disabled) { %>
-          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
-          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
           <% } else { %>
           <span><%= field.val %></span>
-          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>"/>
           <% } %>
         </div>
       <% } %>
@@ -27,11 +27,11 @@
       <div class="inputs">
         <% if (field.type == 'number') { %>
           <% if (!field.disabled) { %>
-          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
-          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
+          <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
           <% } else { %>
           <span><%= field.val %></span>
-          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="0.01" value="<%= field.val %>"/>
+          <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>"/>
           <% } %>
         <% } %>
       </div>
