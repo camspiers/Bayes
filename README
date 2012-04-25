@@ -1,4 +1,0 @@
-Bayesian Calculator
-
-Almond build: node ../r.js -o name=almond.js include=main out=bayes-calc-so.js baseUrl=.
-Standard build: node ../r.js -o name=main out=bayes-calc.js baseUrl=.
