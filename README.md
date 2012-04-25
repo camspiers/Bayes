@@ -4,7 +4,7 @@ This project provides an easy method for internet authors to add a bayesian calc
 
 This project uses [Underscore.js](http://documentcloud.github.com/underscore/), [RequireJS](http://requirejs.org/), [almond.js](https://github.com/jrburke/almond), [jQuery](http://jquery.com/), [d3.js](http://mbostock.github.com/d3/), [jQuery tools](http://jquerytools.org/), [MathJax](http://www.mathjax.org/) and [less](http://lesscss.org/). Thanks to all those awesome developers.
 
-##Configuration:
+##Configuration
 
 To include any of the following calculators on your page, first you must include these script tags in the head of your document:
 
@@ -13,7 +13,7 @@ To include any of the following calculators on your page, first you must include
 
 Once these are included on the page, adding a calculator is as easy as adding a small html snippet into the desired location on your page.
 
-##Examples:
+##Examples
 
 To see a demo of the following examples, visit [the demo page](http://camspiers.github.com/Bayes/)
 
