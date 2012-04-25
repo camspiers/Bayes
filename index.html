@@ -43,40 +43,70 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>The goal of this project is to provide an easy method for internet authors to add a bayesian calculator to their web pages. This project is still in development, so bugs do exist, if you find any you can log them <a href="https://github.com/camspiers/Bayes/issues">here</a></p>
+        <p>This project provides an easy method for internet authors to add a bayesian calculator to their web pages. It is still in development, so bugs do exist. If you find any or if you have any suggestions to make you can log them <a href="https://github.com/camspiers/Bayes/issues">here</a></p>
         <p>This project uses <a href="http://documentcloud.github.com/underscore/">Underscore.js</a>, <a href="http://requirejs.org/">RequireJS</a>, <a href="https://github.com/jrburke/almond">almond.js</a>, <a href="http://jquery.com/">jQuery</a>, <a href="http://mbostock.github.com/d3/">d3.js</a>, <a href="http://jquerytools.org/">jQuery tools</a>, <a href="http://www.mathjax.org/">MathJax</a> and <a href="http://lesscss.org/">less</a>. Thanks to all those awesome developers.</p>
+        <h2>Configuration:</h2>
         <p>To include any of the following calculators on your page, first you must include these script tags in the head of your document:</p>
         <pre><code>&lt;script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;
 &lt;script src="http://camspiers.github.com/Bayes/javascripts/bayes-calc-so.js" charset="utf-8"&gt;&lt;/script&gt;</code></pre>
-        <p>Once these are included on the page, adding a calculator is as easy as pasting the following configuration option of choice into your document:</p>
-        <h2>Simple</h2>
+        <p>Once these are included on the page, adding a calculator is as easy as adding a small html snippet into the desired location on your page.</p>
+        <h2>Examples:</h2>
+        <p>
+          <ul>
+            <li><a href="#simple">Simple</a></li>
+            <li><a href="#simple-graph">Simple with graph</a></li>
+            <li><a href="#full">Full</a></li>
+            <li><a href="#full-no-eq">Full without equation</a></li>
+            <li><a href="#full-graph">Full with graph</a></li>
+            <li><a href="#full-circle">Full with circle graph</a></li>
+            <li><a href="#full-4dp">Full with 4 decimal place rounding</a></li>
+            <li><a href="#simple-afortiori">Simple <em>a fortiori</em></a></li>
+            <li><a href="#full-afortiori">Full <em>a fortiori</em></a></li>
+            <li><a href="#3-hypotheses">3 Hypotheses</a></li>
+            <li><a href="#3-hypotheses-circle">3 Hypotheses with circle graph</a></li>
+          </ul>
+        </p>
+        <h3 id="simple">Simple</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "simple"}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "simple"}'></div>
-        <h2>Simple with graph</h2>
+
+        <h3 id="simple-graph">Simple with graph</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "simple", "graph": true}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "simple", "graph": true}'></div>
-        <h2>Full with equation</h2>
+
+        <h3 id="full">Full</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full"}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full"}'></div>
-        <h2>Full without equation</h2>
+
+        <h3 id="full-no-eq">Full without equation</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "equation": false}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "equation": false}'></div>
-        <h2>Full with equation and bar graph</h2>
+
+        <h3 id="full-graph">Full with bar graph</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "graph": true}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "graph": true}'></div>
-        <h2>Full with equation and circle graph</h2>
+
+        <h3 id="full-circle">Full with circle graph</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "graph": "circle"}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "graph": "circle"}'></div>
-        <h2>Simple <em>a fortiori</em></h2>
+
+        <h3 id="full-4dp">Full with 4 decimal place rounding</h3>
+        <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "dp": 4}'&gt;&lt;/div&gt;</code></pre>
+        <div class="bayes-calc" data-config='{"type": "full", "dp": 4}'></div>
+
+        <h3 id="simple-afortiori">Simple <em>a fortiori</em></h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "simple", "afortiori": true}'></div>
-        <h2>Full <em>a fortiori</em></h2>
+
+        <h3 id="full-afortiori">Full <em>a fortiori</em></h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "afortiori": true}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "afortiori": true}'></div>
-        <h2>3 Hypotheses</h2>
+
+        <h3 id="3-hypotheses">3 Hypotheses</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "num": 3}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "num": 3}'></div>
-        <h2>3 Hypotheses with circle graph</h2>
+
+        <h3 id="3-hypotheses-circle">3 Hypotheses with circle graph</h3>
         <pre><code>&lt;div class="bayes-calc" data-config='{"type": "full", "num": 3, "graph": "circle", "css": {"width": "870px"}}'&gt;&lt;/div&gt;</code></pre>
         <div class="bayes-calc" data-config='{"type": "full", "num": 3, "graph": "circle", "css": {"width": "870px"}}'></div>
       </section>
