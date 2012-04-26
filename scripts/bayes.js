@@ -667,7 +667,60 @@ define([
 						self.graph_circle();
 						break;
 
+					case 'venn':
+						self.graph_venn();
+						break;
+
 				}
+
+			},
+
+			graph_venn: function () {
+
+				var hypotheses_data_labels = self.graph_data('hypotheses'),
+					expected_data_labels = self.graph_data('expected-evidence'),
+					posteriors_data_labels = self.graph_data('posteriors'),
+					d = 400,
+					u_d = 0.9 * d,
+					u_h = d * ((1 - 0.9) / 2);
+
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
+					.append("svg")
+					.attr('class', 'venn')
+					.attr("width", d)
+					.attr("height", d);
+
+				chart.selectAll(".universe")
+					.data([1]).enter()
+					.append("circle")
+					.attr('class', 'universe')
+					.attr("cx", d - (d / 2))
+					.attr("cy", d - (d / 2))
+					.attr("r", u_d / 2);
+
+				chart.selectAll(".prior")
+					.data([hypotheses_data_labels[0][0]]).enter()
+					.append("circle")
+					.attr('class', 'prior')
+					.attr("cx", function (v) {
+						return u_h + Math.sqrt(v) * (u_d /2);
+					})
+					.attr("cy", d - (d / 2))
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (u_d /2);
+					});
+
+				chart.selectAll(".consequent_prior")
+					.data([1]).enter()
+					.append("circle")
+					.attr('class', 'consequent_prior')
+					.attr("cx", function (v) {
+						return u_h + Math.sqrt(v) * (u_d /2);
+					})
+					.attr("cy", d - (d / 2))
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (u_d /2);
+					});
 
 			},
 
@@ -901,7 +954,48 @@ define([
 						self.graph_redraw_circle();
 						break;
 
+					case 'venn':
+						self.graph_redraw_venn();
+						break;
+
 				}
+
+			},
+
+			graph_redraw_venn: function () {
+
+				var hypotheses_data_labels = self.graph_data('hypotheses'),
+					expected_data_labels = self.graph_data('expected-evidence'),
+					posteriors_data_labels = self.graph_data('posteriors'),
+					d = 400,
+					u_d = 0.9 * d,
+					u_h = d * ((1 - 0.9) / 2);
+
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
+
+				chart.selectAll(".prior")
+					.data([hypotheses_data_labels[0][0]])
+					.transition()
+					.duration(1000)
+					.attr("cx", function (v) {
+						return u_h + v * (u_d /2);
+					})
+					.attr("cy", d - (d / 2))
+					.attr("r", function (v) {
+						return v * (u_d /2);
+					});
+
+				chart.selectAll(".prior")
+					.data([hypotheses_data_labels[0][0]])
+					.transition()
+					.duration(1000)
+					.attr("cx", function (v) {
+						return u_h + Math.sqrt(v) * (u_d /2);
+					})
+					.attr("cy", d - (d / 2))
+					.attr("r", function (v) {
+						return Math.sqrt(v) * (u_d /2);
+					});
 
 			},
 
