@@ -699,7 +699,7 @@ define([
 				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
 				area_prior = self.circle_area(r_prior),
 				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
-				x_prior = d - (d / 2);
+				x_prior = d - (d * (2 / 3));
 
 				chart.selectAll(".prior")
 					.data([1]).enter()
@@ -993,7 +993,7 @@ define([
 				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
 				area_prior = self.circle_area(r_prior),
 				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
-				x_prior = d - (d / 2);
+				x_prior = d - (d * (2 / 3));
 
 				chart.selectAll(".prior")
 					.data([1])
