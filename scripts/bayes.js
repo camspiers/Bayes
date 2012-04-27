@@ -685,7 +685,7 @@ define([
 					expected_data_labels = self.graph_data('expected-evidence'),
 					posteriors_data_labels = self.graph_data('posteriors'),
 					d = 400,
-					u_d = 0.9 * d,
+					u_d = 0.5 * d,
 					u_d_half = u_d / 2,
 					u_h = d * ((1 - 0.9) / 2);
 
@@ -695,28 +695,18 @@ define([
 					.attr("width", d)
 					.attr("height", d);
 
-				chart.selectAll(".universe")
-					.data([1]).enter()
-					.append("circle")
-					.attr('class', 'universe')
-					.attr("cx", d - (d / 2))
-					.attr("cy", d - (d / 2))
-					.attr("r", u_d_half);
-
 				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
 				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
-				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * self.circle_area(r_prior)) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
-				area_prior = Math.PI * Math.pow(r_prior, 2),
-				x_prior = u_h + Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half;
-
-				console.log(r_consequent_prior);
+				area_prior = self.circle_area(r_prior),
+				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
+				x_prior = d - (d / 2);
 
 				chart.selectAll(".prior")
 					.data([1]).enter()
 					.append("circle")
 					.attr('class', 'prior')
 					.attr("cx", x_prior)
-					.attr("cy", d - (d / 2))
+					.attr("cy", x_prior)
 					.attr("r", r_prior);
 
 				chart.selectAll(".consequent_prior")
@@ -727,7 +717,7 @@ define([
 						var d,
 						closest;
 						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
-							var t = Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num));
+							var t = Math.abs((area_prior * expected_data_labels[0][0]) - self.graph_venn_area(r_prior, r_consequent_prior, num));
 							if (!closest || t < closest) {
 								closest = t;
 								d = num;
@@ -736,7 +726,7 @@ define([
 						return d + x_prior;
 
 					})
-					.attr("cy", d - (d / 2))
+					.attr("cy", x_prior)
 					.attr("r", r_consequent_prior);
 
 			},
@@ -993,16 +983,17 @@ define([
 					expected_data_labels = self.graph_data('expected-evidence'),
 					posteriors_data_labels = self.graph_data('posteriors'),
 					d = 400,
-					u_d = 0.9 * d,
+					u_d = 0.5 * d,
 					u_d_half = u_d / 2,
 					u_h = d * ((1 - 0.9) / 2);
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
 
 				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
-				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * hypotheses_data_labels[0][0]) + (expected_data_labels[0][1] * hypotheses_data_labels[0][1])) / Math.PI),
-				area_prior = Math.PI * Math.pow(r_prior, 2),
-				x_prior = u_h + Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half;
+				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
+				area_prior = self.circle_area(r_prior),
+				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
+				x_prior = d - (d / 2);
 
 				chart.selectAll(".prior")
 					.data([1])
@@ -1018,14 +1009,13 @@ define([
 					.attr("cx", function () {
 						var d,
 						closest;
-
 						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
-							if (!closest || Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < closest) {
-								closest = Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num));
+							var t = Math.abs((area_prior * expected_data_labels[0][0]) - self.graph_venn_area(r_prior, r_consequent_prior, num));
+							if (!closest || t < closest) {
+								closest = t;
 								d = num;
 							}
 						});
-
 						return d + x_prior;
 
 					})
