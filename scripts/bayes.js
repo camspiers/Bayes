@@ -675,6 +675,10 @@ define([
 
 			},
 
+			circle_area: function (r) {
+				return Math.PI * Math.pow(r, 2);
+			},
+
 			graph_venn: function () {
 
 				var hypotheses_data_labels = self.graph_data('hypotheses'),
@@ -700,9 +704,12 @@ define([
 					.attr("r", u_d_half);
 
 				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
-				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * hypotheses_data_labels[0][0]) + (expected_data_labels[0][1] * hypotheses_data_labels[0][1])) / Math.PI),
+				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
+				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * self.circle_area(r_prior)) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
 				area_prior = Math.PI * Math.pow(r_prior, 2),
 				x_prior = u_h + Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half;
+
+				console.log(r_consequent_prior);
 
 				chart.selectAll(".prior")
 					.data([1]).enter()
@@ -717,11 +724,17 @@ define([
 					.append("circle")
 					.attr('class', 'consequent_prior')
 					.attr("cx", function () {
-						console.log(area_prior);
-						return _.reduce(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (mem, num) {
-							//console.log(Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)));
-							return Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < mem ? self.graph_venn_area(r_prior, r_consequent_prior, num) : mem;
-						}, 99999) + x_prior;
+						var d,
+						closest;
+						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
+							var t = Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num));
+							if (!closest || t < closest) {
+								closest = t;
+								d = num;
+							}
+						});
+						return d + x_prior;
+
 					})
 					.attr("cy", d - (d / 2))
 					.attr("r", r_consequent_prior);
@@ -1003,10 +1016,18 @@ define([
 					.transition()
 					.duration(1000)
 					.attr("cx", function () {
-						// console.log()
-						return _.reduce(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (mem, num) {
-							return Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < mem ? self.graph_venn_area(r_prior, r_consequent_prior, num) : mem;
-						}, 99999) + x_prior;
+						var d,
+						closest;
+
+						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
+							if (!closest || Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < closest) {
+								closest = Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num));
+								d = num;
+							}
+						});
+
+						return d + x_prior;
+
 					})
 					.attr("r", r_consequent_prior);
 
