@@ -682,6 +682,7 @@ define([
 					posteriors_data_labels = self.graph_data('posteriors'),
 					d = 400,
 					u_d = 0.9 * d,
+					u_d_half = u_d / 2,
 					u_h = d * ((1 - 0.9) / 2);
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
@@ -696,33 +697,44 @@ define([
 					.attr('class', 'universe')
 					.attr("cx", d - (d / 2))
 					.attr("cy", d - (d / 2))
-					.attr("r", u_d / 2);
+					.attr("r", u_d_half);
+
+				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
+				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * hypotheses_data_labels[0][0]) + (expected_data_labels[0][1] * hypotheses_data_labels[0][1])) / Math.PI),
+				area_prior = Math.PI * Math.pow(r_prior, 2),
+				x_prior = u_h + Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half;
 
 				chart.selectAll(".prior")
-					.data([hypotheses_data_labels[0][0]]).enter()
+					.data([1]).enter()
 					.append("circle")
 					.attr('class', 'prior')
-					.attr("cx", function (v) {
-						return u_h + Math.sqrt(v) * (u_d /2);
-					})
+					.attr("cx", x_prior)
 					.attr("cy", d - (d / 2))
-					.attr("r", function (v) {
-						return Math.sqrt(v) * (u_d /2);
-					});
+					.attr("r", r_prior);
 
 				chart.selectAll(".consequent_prior")
 					.data([1]).enter()
 					.append("circle")
 					.attr('class', 'consequent_prior')
-					.attr("cx", function (v) {
-						return u_h + Math.sqrt(v) * (u_d /2);
+					.attr("cx", function () {
+						console.log(area_prior);
+						return _.reduce(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (mem, num) {
+							//console.log(Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)));
+							return Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < mem ? self.graph_venn_area(r_prior, r_consequent_prior, num) : mem;
+						}, 99999) + x_prior;
 					})
 					.attr("cy", d - (d / 2))
-					.attr("r", function (v) {
-						return Math.sqrt(v) * (u_d /2);
-					});
+					.attr("r", r_consequent_prior);
 
 			},
+
+			graph_venn_area: _.memoize(function (r, R, d) {
+					return Math.pow(r, 2) * Math.acos((Math.pow(d, 2) + Math.pow(r, 2) - Math.pow(R, 2)) / (2 * d * r))
+							 + Math.pow(R, 2) * Math.acos((Math.pow(d, 2) + Math.pow(R, 2) - Math.pow(r, 2)) / (2 * d * R))
+							 - ((1 / 2) * Math.sqrt(((-1 * d) + r + R) * (d + r - R) * (d - r + R) * (d + r + R)));
+				}, function (r, R, d) {
+					return [r, R, d].join('');
+			}),
 
 			graph_circle: function () {
 
@@ -969,33 +981,34 @@ define([
 					posteriors_data_labels = self.graph_data('posteriors'),
 					d = 400,
 					u_d = 0.9 * d,
+					u_d_half = u_d / 2,
 					u_h = d * ((1 - 0.9) / 2);
 
 				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
 
-				chart.selectAll(".prior")
-					.data([hypotheses_data_labels[0][0]])
-					.transition()
-					.duration(1000)
-					.attr("cx", function (v) {
-						return u_h + v * (u_d /2);
-					})
-					.attr("cy", d - (d / 2))
-					.attr("r", function (v) {
-						return v * (u_d /2);
-					});
+				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
+				r_consequent_prior = u_d_half * Math.sqrt(((expected_data_labels[0][0] * hypotheses_data_labels[0][0]) + (expected_data_labels[0][1] * hypotheses_data_labels[0][1])) / Math.PI),
+				area_prior = Math.PI * Math.pow(r_prior, 2),
+				x_prior = u_h + Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half;
 
 				chart.selectAll(".prior")
-					.data([hypotheses_data_labels[0][0]])
+					.data([1])
 					.transition()
 					.duration(1000)
-					.attr("cx", function (v) {
-						return u_h + Math.sqrt(v) * (u_d /2);
+					.attr("cx", x_prior)
+					.attr("r", r_prior);
+
+				chart.selectAll(".consequent_prior")
+					.data([1])
+					.transition()
+					.duration(1000)
+					.attr("cx", function () {
+						// console.log()
+						return _.reduce(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (mem, num) {
+							return Math.abs(area_prior - self.graph_venn_area(r_prior, r_consequent_prior, num)) < mem ? self.graph_venn_area(r_prior, r_consequent_prior, num) : mem;
+						}, 99999) + x_prior;
 					})
-					.attr("cy", d - (d / 2))
-					.attr("r", function (v) {
-						return Math.sqrt(v) * (u_d /2);
-					});
+					.attr("r", r_consequent_prior);
 
 			},
 
