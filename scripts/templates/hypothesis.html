@@ -1,10 +1,10 @@
-<fieldset class="hypothesis<%= bayes.config.afortiori ? ' fortiori' : '' %>">
+<fieldset class="bayes-hypothesis<%= bayes.config.afortiori ? ' bayes-fortiori' : '' %>">
   <% _.each(bayes.fields(num), function (field) { %>
-  <div class="clearfix field field-<%= field.name %>">
+  <div class="bayes-clearfix bayes-field field-<%= field.name %>">
     <label for="Abbreviated_H.b_<%= num %>" title="<%= field.title %>"><%= _.template(field.label)({num: num}) %></label>
     <% if (bayes.config.afortiori) { %>
       <% if (field.type == 'number') { %>
-        <div class="inputs">
+        <div class="bayes-inputs">
           <% if (!field.disabled) { %>
           <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
           <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
@@ -13,7 +13,7 @@
           <input type="hidden" name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>"/>
           <% } %>
         </div>
-        <div class="inputs">
+        <div class="bayes-inputs">
           <% if (!field.disabled) { %>
           <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
           <input type="number" <% if (field.hint) { %>title="<%= field.hint %>"<% } %> name="<%= field.name %>_<%= num %>" id="Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>
@@ -24,7 +24,7 @@
         </div>
       <% } %>
     <% } else { %>
-      <div class="inputs">
+      <div class="bayes-inputs">
         <% if (field.type == 'number') { %>
           <% if (!field.disabled) { %>
           <input type="range" class="bayes-range" name="proxy_<%= field.name %>_<%= num %>" id="Proxy_Abbreviated_<%= field.name %>_<%= num %>" min="0" max="1" step="<%= bayes.step() %>" value="<%= field.val %>" <% if (field.name == 'hb' && disabled) { %>disabled="disabled"<% } %>/>

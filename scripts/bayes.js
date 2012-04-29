@@ -209,18 +209,18 @@ define([
 
 			sync_range_fields: function($this, type) {
 
-				var $field = $this.closest('.field'),
-				$fields = $field.siblings('.field'),
-				$inputs = $field.find('.inputs'),
-				$input = $this.closest('.inputs'),
+				var $field = $this.closest('.bayes-field'),
+				$fields = $field.siblings('.bayes-field'),
+				$inputs = $field.find('.bayes-inputs'),
+				$input = $this.closest('.bayes-inputs'),
 				i = $inputs.index($input);
 				$this.siblings('input[type=' + type + ']').val($this.val()).trigger('bayes-change');
 				
 				if ($field.hasClass('field-hb')) {
-					$fields.filter('.field-nhb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
+					$fields.filter('.field-nhb').find('.bayes-inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
 				}
 				if ($field.hasClass('field-nhb')) {
-					$fields.filter('.field-hb').find('.inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
+					$fields.filter('.field-hb').find('.bayes-inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
 				}
 
 			},
@@ -232,7 +232,7 @@ define([
 					var data = self.data(),
 					min = parseFloat(data['hb_1']) * parseFloat(data['ehb_1']),
 					max = min + parseFloat(data['nhb_1']),
-					$inputs = self.config.el.find('.field-eb .inputs:eq(0) input');
+					$inputs = self.config.el.find('.field-eb .bayes-inputs:eq(0) input');
 
 					if (parseFloat(data['eb_1']) < min) {
 
@@ -281,8 +281,8 @@ define([
 							return index == i ? 0 : 1;
 						})));
 
-						self.config.el.find('.field-heb .inputs:eq(' + i + ') span').text(val);
-						self.config.el.find('.field-heb .inputs:eq(' + i + ') input').val(val);
+						self.config.el.find('.field-heb .bayes-inputs:eq(' + i + ') span').text(val);
+						self.config.el.find('.field-heb .bayes-inputs:eq(' + i + ') input').val(val);
 
 					}
 
@@ -294,7 +294,7 @@ define([
 
 							for (var j = 0; j < data['hb_' + i].length; j++) {
 
-								self.config.el.find('.field-heb .inputs:eq(' + j + ') span').text(self.round(self.calculate({
+								self.config.el.find('.field-heb .bayes-inputs:eq(' + j + ') span').text(self.round(self.calculate({
 									eb: data['eb_' + i] ? data['eb_' + i][j] : 0,
 									ehb: data['ehb_' + i] ? data['ehb_' + i][j] : 0,
 									hb: data['hb_' + i] ? data['hb_' + i][j] : 0,
@@ -316,8 +316,8 @@ define([
 								enhb: data['enhb_' + i],
 							}));
 
-							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') span').text(calc);
-							self.config.el.find('.field-heb .inputs:eq(' + (i - 1) + ') input').val(calc);
+							self.config.el.find('.field-heb .bayes-inputs:eq(' + (i - 1) + ') span').text(calc);
+							self.config.el.find('.field-heb .bayes-inputs:eq(' + (i - 1) + ') input').val(calc);
 
 						}
 
