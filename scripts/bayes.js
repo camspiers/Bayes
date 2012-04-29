@@ -668,7 +668,7 @@ define([
 						break;
 
 					case 'venn':
-						self.graph_venn();
+						self.graph_venn(true);
 						break;
 
 				}
@@ -679,7 +679,7 @@ define([
 				return Math.PI * Math.pow(r, 2);
 			},
 
-			graph_venn: function () {
+			graph_venn: function (setup) {
 
 				var hypotheses_data_labels = self.graph_data('hypotheses'),
 					expected_data_labels = self.graph_data('expected-evidence'),
@@ -689,49 +689,135 @@ define([
 					u_d_half = u_d / 2,
 					u_h = d * ((1 - 0.9) / 2);
 
-				var chart = d3.select(self.config.el.find('.bayes-graph').get(0))
-					.append("svg")
-					.attr('class', 'venn')
-					.attr("width", d)
-					.attr("height", d);
+				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
+
+				if (setup) {
+
+					chart.append("svg")
+						.attr('class', 'venn')
+						.attr("width", d)
+						.attr("height", d);
+
+				}
+
+				var svg = chart.select('svg');
 
 				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
 				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
 				area_prior = self.circle_area(r_prior),
 				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
-				x_prior = d - (d * (2 / 3));
+				x_prior = d * (1 / 3);
 
-				chart.selectAll(".prior")
-					.data([1]).enter()
-					.append("circle")
-					.attr('class', 'prior')
+				if (setup) {
+
+					svg.append('circle')
+						.attr('class', 'prior')
+
+				}
+
+				var prior = svg.selectAll(".prior");
+
+				prior.transition()
+					.duration(1000)
 					.attr("cx", x_prior)
 					.attr("cy", x_prior)
 					.attr("r", r_prior);
 
-				chart.selectAll(".consequent_prior")
-					.data([1]).enter()
-					.append("circle")
-					.attr('class', 'consequent_prior')
-					.attr("cx", function () {
-						var d,
-						closest;
-						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
-							var t = Math.abs((area_prior * expected_data_labels[0][0]) - self.graph_venn_area(r_prior, r_consequent_prior, num));
-							if (!closest || t < closest) {
-								closest = t;
-								d = num;
-							}
-						});
-						return d + x_prior;
+				if (setup) {
 
-					})
-					.attr("cy", x_prior)
-					.attr("r", r_consequent_prior);
+					svg.append("circle")
+						.attr('class', 'consequent_prior');
+
+				}
+
+				var consequent_prior = svg.selectAll(".consequent_prior");
+
+				consequent_prior.transition()
+					.duration(1000)
+					.attr("cx", function () { //TODO refactor
+					var d,
+					closest;
+					_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
+						var t = Math.abs((area_prior * expected_data_labels[0][0]) - self.graph_venn_lens_area(r_prior, r_consequent_prior, num));
+						if (!closest || t < closest) {
+							closest = t;
+							d = num;
+						}
+					});
+					return d + x_prior;
+
+				})
+				.attr("cy", x_prior)
+				.attr("r", r_consequent_prior);
+
+				if (setup) {
+
+					svg.selectAll(".label")
+						.data(['H', 'E∩H','E'])
+						.enter().append("text")
+						.attr("class", "label")
+						.attr("x", 25)
+						.attr("y", function (v, i) {
+							return (i * 25) + 3;
+						})
+						.attr("dy", "1em")
+						.text(String);
+
+					var fill = function (v, i) {
+
+						if (_.isString(v)) {
+							return v;
+						}
+
+						var gradient = svg.append("svg:defs")
+							.append("svg:linearGradient")
+							.attr("id", "gradient-" + i)
+							.attr("x1", "0%")
+							.attr("y1", "0%")
+							.attr("x2", "100%")
+							.attr("y2", "0%")
+							.attr("spreadMethod", "pad");
+
+						gradient.append("svg:stop")
+							.attr("offset", "0%")
+							.attr("stop-color", v.start)
+							.attr("stop-opacity", 1);
+
+						gradient.append("svg:stop")
+							.attr("offset", "100%")
+							.attr("stop-color", v.stop)
+							.attr("stop-opacity", 1);
+
+						return 'url(#gradient-' + i + ')';
+
+					}
+
+					svg.selectAll(".color-key")
+						.data([
+							{
+								start: '#20B2AA',
+								stop: '#8F59D4'
+							},
+							'#8F59D4',
+							{
+								start: '#8F59D4',
+								stop: '#FE7FFE'
+							}
+						])
+						.enter().append("circle")
+						.attr("class", 'color-key')
+						.style('fill', fill)
+						.attr("cy", function (v, i) {
+							return (i * 25) + 11;
+						})
+						.attr("cx", 11)
+						.attr("r", 10);
+
+				}
 
 			},
 
-			graph_venn_area: _.memoize(function (r, R, d) {
+			graph_venn_lens_area: _.memoize(function (r, R, d) {
 					return Math.pow(r, 2) * Math.acos((Math.pow(d, 2) + Math.pow(r, 2) - Math.pow(R, 2)) / (2 * d * r))
 							 + Math.pow(R, 2) * Math.acos((Math.pow(d, 2) + Math.pow(R, 2) - Math.pow(r, 2)) / (2 * d * R))
 							 - ((1 / 2) * Math.sqrt(((-1 * d) + r + R) * (d + r - R) * (d - r + R) * (d + r + R)));
@@ -970,56 +1056,10 @@ define([
 						break;
 
 					case 'venn':
-						self.graph_redraw_venn();
+						self.graph_venn();
 						break;
 
 				}
-
-			},
-
-			graph_redraw_venn: function () {
-
-				var hypotheses_data_labels = self.graph_data('hypotheses'),
-					expected_data_labels = self.graph_data('expected-evidence'),
-					posteriors_data_labels = self.graph_data('posteriors'),
-					d = 400,
-					u_d = 0.5 * d,
-					u_d_half = u_d / 2,
-					u_h = d * ((1 - 0.9) / 2);
-
-				var chart = d3.select(self.config.el.find('.bayes-graph').get(0));
-
-				var r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
-				r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
-				area_prior = self.circle_area(r_prior),
-				r_consequent_prior = Math.sqrt(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * self.circle_area(r_n_prior))) / Math.PI),
-				x_prior = d - (d * (2 / 3));
-
-				chart.selectAll(".prior")
-					.data([1])
-					.transition()
-					.duration(1000)
-					.attr("cx", x_prior)
-					.attr("r", r_prior);
-
-				chart.selectAll(".consequent_prior")
-					.data([1])
-					.transition()
-					.duration(1000)
-					.attr("cx", function () {
-						var d,
-						closest;
-						_.each(_.range(r_prior < r_consequent_prior ? r_consequent_prior - r_prior : r_prior - r_consequent_prior, r_prior + r_consequent_prior, 1), function (num) {
-							var t = Math.abs((area_prior * expected_data_labels[0][0]) - self.graph_venn_area(r_prior, r_consequent_prior, num));
-							if (!closest || t < closest) {
-								closest = t;
-								d = num;
-							}
-						});
-						return d + x_prior;
-
-					})
-					.attr("r", r_consequent_prior);
 
 			},
 
