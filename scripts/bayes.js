@@ -207,6 +207,14 @@ define([
 				return 1 / Math.pow(10, self.config.dp);
 			},
 
+			min: function () {
+				return self.step();
+			},
+
+			max: function () {
+				return 1 - self.step();
+			},
+
 			sync_range_fields: function($this, type) {
 
 				var $field = $this.closest('.bayes-field'),
