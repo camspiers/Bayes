@@ -35,6 +35,9 @@ To see a demo of the following examples, visit [the demo page](http://camspiers.
 ###Full with circle graph
 	<div class="bayes-calc" data-config='{"type": "full", "graph": "circle"}'></div>
 
+###Full with *area-proportional* venn graph
+	<div class="bayes-calc" data-config='{"type": "full", "graph": "venn"}'></div>
+
 ###Full with 4 decimal place rounding
 	<div class="bayes-calc" data-config='{"type": "full", "dp": 4}'></div>
 
