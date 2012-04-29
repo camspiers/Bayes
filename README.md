@@ -1,8 +1,10 @@
 #Bayesian Calculator
 
-This project provides an easy method for internet authors to add a bayesian calculator to their web pages. It is still in development, so bugs do exist. If you find any or if you have any suggestions to make you can log them [here](https://github.com/camspiers/Bayes/issues).
+This project provides an easy method for internet authors to add a [Bayes' Theorem](http://en.wikipedia.org/wiki/Bayes'_theorem) calculator and visualization tool to their web pages. The project is in development so if you find any bugs or if you have any suggestions to make you can log them [here](https://github.com/camspiers/Bayes/issues).
 
 This project uses [Underscore.js](http://documentcloud.github.com/underscore/), [RequireJS](http://requirejs.org/), [almond.js](https://github.com/jrburke/almond), [jQuery](http://jquery.com/), [d3.js](http://mbostock.github.com/d3/), [jQuery tools](http://jquerytools.org/), [MathJax](http://www.mathjax.org/) and [less](http://lesscss.org/). Thanks to all those awesome developers.
+
+Also a special thanks to [Richard Carrier](http://www.richardcarrier.info/) for giving me excellent feedback during the development of the project.
 
 ##Configuration
 
