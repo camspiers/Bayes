@@ -686,10 +686,9 @@ define([
 
 				var hypotheses_data_labels = self.graph_data('hypotheses'),
 					expected_data_labels = self.graph_data('expected-evidence'),
-					d = 400,
-					u_d = 0.5 * d,
+					dim = 400,
+					u_d = 0.7 * dim,
 					u_d_half = u_d / 2,
-					u_h = d * ((1 - 0.9) / 2),
 					circle_area = function (r) {
 						return Math.PI * Math.pow(r, 2);
 					},
@@ -697,25 +696,44 @@ define([
 						return Math.sqrt(A / Math.PI);
 					},
 					chart = d3.select(self.config.el.find('.bayes-graph').get(0)),
-					r_prior = Math.sqrt(hypotheses_data_labels[0][0]) * u_d_half,
-					r_n_prior = Math.sqrt(hypotheses_data_labels[0][1]) * u_d_half,
+
+					r = d3.scale.sqrt().domain([0, 1]).range([0, u_d_half]),
+					r_prior = r(hypotheses_data_labels[0][0]),
+					r_n_prior = r(hypotheses_data_labels[0][1]),
+
 					area_prior = circle_area(r_prior),
 					r_consequent_prior = circle_radius(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * circle_area(r_n_prior)))),
-					x_prior = d * (1 / 3),
-					circle_lens_area = _.memoize(function (r, R, d) {
+					circle_lens_area = _.memoize(
+						function (r, R, d) {
 							return Math.pow(r, 2) * Math.acos((Math.pow(d, 2) + Math.pow(r, 2) - Math.pow(R, 2)) / (2 * d * r))
 									 + Math.pow(R, 2) * Math.acos((Math.pow(d, 2) + Math.pow(R, 2) - Math.pow(r, 2)) / (2 * d * R))
 									 - ((1 / 2) * Math.sqrt(((-1 * d) + r + R) * (d + r - R) * (d - r + R) * (d + r + R)));
 						}, function (r, R, d) {
-							return [r, R, d].join('');
-					});
+							return [r, R, d].join('-');
+						}
+					),
+
+					d = (function () {
+						var d,
+						closest;
+						_.each(_.range(Math.abs(r_consequent_prior - r_prior), r_prior + r_consequent_prior, 1), function (num) {
+							var t = Math.abs((area_prior * expected_data_labels[0][0]) - circle_lens_area(r_prior, r_consequent_prior, num));
+							if (!closest || t < closest) {
+								closest = t;
+								d = num;
+							}
+						});
+						return d;
+					})(),
+
+					margin = (dim - (r_prior + d + r_consequent_prior)) / 2;
 
 				if (setup) {
 
 					chart.append("svg")
 						.attr('class', 'venn')
-						.attr("width", d)
-						.attr("height", d);
+						.attr("width", dim)
+						.attr("height", dim);
 
 				}
 
@@ -732,8 +750,8 @@ define([
 
 				prior.transition()
 					.duration(1000)
-					.attr("cx", x_prior)
-					.attr("cy", x_prior)
+					.attr("cx", margin + r_prior)
+					.attr("cy", dim / 2)
 					.attr("r", r_prior);
 
 				if (setup) {
@@ -747,20 +765,8 @@ define([
 
 				consequent_prior.transition()
 					.duration(1000)
-					.attr("cx", function () {
-						var d,
-						closest;
-						_.each(_.range(Math.abs(r_consequent_prior - r_prior), r_prior + r_consequent_prior, 1), function (num) {
-							var t = Math.abs((area_prior * expected_data_labels[0][0]) - circle_lens_area(r_prior, r_consequent_prior, num));
-							if (!closest || t < closest) {
-								closest = t;
-								d = num;
-							}
-						});
-						return d + x_prior;
-
-					})
-					.attr("cy", x_prior)
+					.attr("cx", margin + r_prior + d)
+					.attr("cy", dim / 2)
 					.attr("r", r_consequent_prior);
 
 				if (setup) {
