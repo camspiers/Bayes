@@ -1,4 +1,3 @@
-//Depends on jQuery and underscore
 define([
 	"jquery",
 	"underscore",
@@ -1180,8 +1179,6 @@ define([
 					.text(String);
 
 			},
-
-			//adds less text to dom
 
 			css: function (css) {
 
