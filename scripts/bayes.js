@@ -791,9 +791,9 @@ define([
 						var gradient = svg.append("svg:defs")
 							.append("svg:linearGradient")
 							.attr("id", "gradient-" + i)
-							.attr("x1", "0%")
+							.attr("x1", "50%")
 							.attr("y1", "0%")
-							.attr("x2", "100%")
+							.attr("x2", "51%")
 							.attr("y2", "0%")
 							.attr("spreadMethod", "pad");
 
