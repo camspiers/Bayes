@@ -221,7 +221,7 @@ define([
 				$inputs = $field.find('.bayes-inputs'),
 				$input = $this.closest('.bayes-inputs'),
 				i = $inputs.index($input);
-				$this.siblings('input[type=' + type + ']').val($this.val()).trigger('bayes-change');
+				$this.siblings('input[type=' + type + ']').val(self.round($this.val())).trigger('bayes-change');
 				
 				if ($field.hasClass('field-hb')) {
 					$fields.filter('.field-nhb').find('.bayes-inputs:eq(' + i + ') input').val(self.round(1 - parseFloat($this.val())));
