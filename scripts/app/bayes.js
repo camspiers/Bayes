@@ -8,9 +8,9 @@ define([
 	"../scripts/lib/jquery.tools.min.js",
 	"../scripts/lib/html5slider.js",
 	"../scripts/lib/d3.v2.min.js"
-], function ($, _, bayes, hypothesis, style) {
+], function ($, und, bayes, hypothesis, style) {
 
-	return function() {
+	return function () {
 
 		var self = {
 
@@ -20,8 +20,8 @@ define([
 				selector: false,
 				el: false,
 				templates: {
-					bayes: _.template(bayes),
-					hypothesis: _.template(hypothesis)
+					bayes: und.template(bayes),
+					hypothesis: und.template(hypothesis)
 				},
 				afortiori: false,
 				num: 1,
@@ -37,13 +37,13 @@ define([
 
 			init: function (config) {
 
-				if (_.isString(config)) {
+				if (und.isString(config)) {
 
 					self.config.selector = config;
 
 				} else {
 
-					_.extend(self.config, config);
+					und.extend(self.config, config);
 
 				}
 
@@ -53,11 +53,11 @@ define([
 
 				}
 
-				if (_.isUndefined(config.css) || _.isUndefined(config.css.width)) {
+				if (und.isUndefined(config.css) || und.isUndefined(config.css.width)) {
 
 					var width = 500;
 
-					if (self.config.num != 1) {
+					if (self.config.num !== 1) {
 
 						width = 290 * self.config.num;
 
@@ -73,7 +73,7 @@ define([
 
 				}
 
-				if (_.isBoolean(self.config.graph) && self.config.graph) {
+				if (und.isBoolean(self.config.graph) && self.config.graph) {
 
 					self.config.graph = 'bar';
 
@@ -135,19 +135,22 @@ define([
 
 			events: function () {
 
-				var $form = self.config.el.find('form');
+				var $form = self.config.el.find('form'),
+                                $hypotheses,
+                                hypotheses,
+                                sum;
 
-				$form.find('input[type=range]').change(function() {
+				$form.find('input[type=range]').change(function () {
 					self.sync_range_fields($(this), 'number');
 					self.update_calc();
 				});
 
-				$form.find('input[type=number]').change(function() {
+				$form.find('input[type=number]').change(function () {
 					self.sync_range_fields($(this), 'range');
 					self.update_calc();
 				});
 
-				$form.find('label[title],input[title],button[title]').mouseover(function() {
+				$form.find('label[title],input[title],button[title]').mouseover(function () {
 					var $this = $(this);
 					if (!$this.data("tooltip")) {
 						$this.tooltip({
@@ -159,27 +162,27 @@ define([
 
 				if (self.config.num > 2) {
 
-					var $hypotheses = $form.find('.field-hb input[type=number]'),
-					hypotheses = $hypotheses.toArray(),
+					$hypotheses = $form.find('.field-hb input[type=number]');
+					hypotheses = $hypotheses.toArray();
 					sum =  function (mem, el) {
 						return mem + parseFloat($(el).val());
 					};
 
 					$hypotheses.bind('change bayes-change', function () {
 
-						if (_.reduce(hypotheses, sum, 0) != 1) { //sum is not 1
+						if (und.reduce(hypotheses, sum, 0) !== 1) { //sum is not 1
 							var $this = $(this),
 							index = $hypotheses.index($this);
-							
-							if (_.reduce(hypotheses.slice(0, index + 1), sum, 0) > 1){ //Left of interacted hypothesis including
 
-								$this.siblings().andSelf().val(self.round(1 - _.reduce(hypotheses.slice(0, index), sum, 0)));
+							if (und.reduce(hypotheses.slice(0, index + 1), sum, 0) > 1) { //Left of interacted hypothesis including
+
+								$this.siblings().andSelf().val(self.round(1 - und.reduce(hypotheses.slice(0, index), sum, 0)));
 
 							}
 
 							var $gt = $hypotheses.filter(':gt(' + index + ')'),
-							gt_sum = _.reduce($gt.toArray(), sum, 0),
-							to_fill = 1 - _.reduce(hypotheses.slice(0, index + 1), sum, 0);
+							gt_sum = und.reduce($gt.toArray(), sum, 0),
+							to_fill = 1 - und.reduce(hypotheses.slice(0, index + 1), sum, 0);
 
 							$gt.each(function () {
 								var $this = $(this);
@@ -214,7 +217,7 @@ define([
 				return 1 - self.step();
 			},
 
-			sync_range_fields: function($this, type) {
+			sync_range_fields: function ($this, type) {
 
 				var $field = $this.closest('.bayes-field'),
 				$fields = $field.siblings('.bayes-field'),
@@ -234,7 +237,7 @@ define([
 
 			constrain_data: function () {
 
-				if (self.config.type == 'simple') {
+				if (self.config.type === 'simple') {
 
 					var data = self.data(),
 					min = parseFloat(data['hb_1']) * parseFloat(data['ehb_1']),
@@ -284,7 +287,7 @@ define([
 
 					for (var i = 0; i < self.config.num; i++) {
 
-						var val = self.round(self.calculate(_.sortBy(calc, function (val, index) {
+						var val = self.round(self.calculate(und.sortBy(calc, function (val, index) {
 							return index == i ? 0 : 1;
 						})));
 
@@ -297,7 +300,7 @@ define([
 
 					for (var i = 1; i <= self.config.num; i++) {
 
-						if (_.isArray(data['hb_' + i])) {
+						if (und.isArray(data['hb_' + i])) {
 
 							for (var j = 0; j < data['hb_' + i].length; j++) {
 
@@ -345,15 +348,15 @@ define([
 				var numerator = 0,
 				denominator = [];
 
-				if (_.isArray(calc)) {
+				if (und.isArray(calc)) {
 
 					numerator = parseFloat(calc[0].hb) * parseFloat(calc[0].ehb);
 
-					_.each(calc, function (val) {
+					und.each(calc, function (val) {
 						denominator.push(parseFloat(val.hb) * parseFloat(val.ehb));
 					});
 
-					return numerator / _.reduce(denominator, function (mem, val) {
+					return numerator / und.reduce(denominator, function (mem, val) {
 						return mem + val;
 					});
 
@@ -373,17 +376,17 @@ define([
 
 			},
 
-			serializeArray: function($el) {
-				return $el.map(function(){
+			serializeArray: function ($el) {
+				return $el.map(function (){
 					return this.elements ? $.makeArray( this.elements ) : this;
 				})
-				.map(function( i, elem ){
+				.map(function ( i, elem ){
 					var val = $( this ).val();
 
 					return val == null ?
 						null :
 						$.isArray( val ) ?
-							$.map( val, function( val, i ){
+							$.map( val, function ( val, i ){
 								return { name: elem.name, value: val };
 							}) :
 							{ name: elem.name, value: val };
@@ -394,7 +397,7 @@ define([
 
 				var data = {};
 
-				_.each(self.serializeArray(self.config.el.find('form input[type=number],form input[type=hidden]')), function(obj) {
+				und.each(self.serializeArray(self.config.el.find('form input[type=number],form input[type=hidden]')), function (obj) {
 
 				  if (data.hasOwnProperty(obj.name)) {
 
@@ -511,8 +514,8 @@ define([
 
 						var include = self.config.num > 2 ? [] : ['hb single', 'nhb', 'ehb single', 'eb', 'heb single'];
 
-						fields = _.filter(field_types, function (value) {
-							return _.include(include, value.alias ? value.alias : value.name);
+						fields = und.filter(field_types, function (value) {
+							return und.include(include, value.alias ? value.alias : value.name);
 						});
 
 						break;
@@ -521,8 +524,8 @@ define([
 
 						var include = self.config.num > 2 ? ['hb', 'ehb', 'heb'] : ['hb single', 'nhb', 'ehb single', 'enhb single', 'heb single'];
 
-						fields = _.filter(field_types, function (value) {
-							return _.include(include, value.alias ? value.alias : value.name)
+						fields = und.filter(field_types, function (value) {
+							return und.include(include, value.alias ? value.alias : value.name)
 						});
 
 						break;
@@ -537,7 +540,7 @@ define([
 
 			template: function (template, options) {
 
-				return self.config.templates[template] && self.config.templates[template](_.extend({
+				return self.config.templates[template] && self.config.templates[template](und.extend({
 					bayes: self,
 					templates: self.config.templates
 				}, options));
@@ -546,14 +549,14 @@ define([
 
 			hypothesis: function (options) {
 
-				return self.template('hypothesis', _.extend({ num: 1 }, options));
+				return self.template('hypothesis', und.extend({ num: 1 }, options));
 
 			},
 
 
-			round: function(num, dec) {
+			round: function (num, dec) {
 
-				if (_.isUndefined(dec)) {
+				if (und.isUndefined(dec)) {
 					dec = self.config.dp;
 				}
 
@@ -654,7 +657,7 @@ define([
 
 				}
 
-				return [_.map(data, function (val) {
+				return [und.map(data, function (val) {
 					return self.round(val);
 				}), labels];
 
@@ -703,7 +706,7 @@ define([
 
 					area_prior = circle_area(r_prior),
 					r_consequent_prior = circle_radius(((expected_data_labels[0][0] * area_prior) + (expected_data_labels[0][1] * circle_area(r_n_prior)))),
-					circle_lens_area = _.memoize(
+					circle_lens_area = und.memoize(
 						function (r, R, d) {
 							return Math.pow(r, 2) * Math.acos((Math.pow(d, 2) + Math.pow(r, 2) - Math.pow(R, 2)) / (2 * d * r))
 									 + Math.pow(R, 2) * Math.acos((Math.pow(d, 2) + Math.pow(R, 2) - Math.pow(r, 2)) / (2 * d * R))
@@ -716,7 +719,7 @@ define([
 					d = (function () {
 						var d,
 						closest;
-						_.each(_.range(Math.abs(r_consequent_prior - r_prior), r_prior + r_consequent_prior, 1), function (num) {
+						und.each(und.range(Math.abs(r_consequent_prior - r_prior), r_prior + r_consequent_prior, 1), function (num) {
 							var t = Math.abs((area_prior * expected_data_labels[0][0]) - circle_lens_area(r_prior, r_consequent_prior, num));
 							if (!closest || t < closest) {
 								closest = t;
@@ -784,7 +787,7 @@ define([
 
 					var fill = function (v, i) {
 
-						if (_.isString(v)) {
+						if (und.isString(v)) {
 							return v;
 						}
 
@@ -896,11 +899,11 @@ define([
 				var expected_start = 0.15 * height,
 					expected_height = 0.70 * height,
 					expected_heights = [],
-					expected_sum = _.reduce(expected_data_labels[0], function (mem, v) {
+					expected_sum = und.reduce(expected_data_labels[0], function (mem, v) {
 						return mem + v;
 					});
 
-				_.each(expected_data_labels[0], function (v) {
+				und.each(expected_data_labels[0], function (v) {
 					expected_heights.push( expected_sum ? (v / expected_sum) * expected_height : 0);
 				});
 
@@ -912,7 +915,7 @@ define([
 					})
 					.attr("x", (width_div * 2) - (width_div / 2) - 30)
 					.attr("y", function (v, i) {
-						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+						return expected_start + und.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
 					})
 					.attr("width", 60)
 					.attr("height", function (v, i) { return expected_heights[i]; });
@@ -933,7 +936,7 @@ define([
 					.attr("class", "expected-label")
 					.attr("x", (width_div * 2) - (width_div / 2))
 					.attr("y", function (v, i) {
-						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+						return expected_start + und.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
 					})
 					.attr("dy", "20px")
 					.attr("text-anchor", "middle")
@@ -1024,7 +1027,7 @@ define([
 				chart.selectAll("rect")
 					.data(data)
 					.enter().append("rect")
-					.attr("y", function(d, i) { return i * (height / data.length); } )
+					.attr("y", function (d, i) { return i * (height / data.length); } )
 					.attr("width", x)
 					.attr("height", (height / data.length));
 
@@ -1034,7 +1037,7 @@ define([
 					.attr("class", "bar")
 					.attr("x", x)
 					.attr("dx", -3) // padding-right
-					.attr("y", function(d, i) { return i * (height / data.length) + (height / data.length / 2); } )
+					.attr("y", function (d, i) { return i * (height / data.length) + (height / data.length / 2); } )
 					.attr("dy", ".35em") // vertical-align: middle
 					.attr("text-anchor", "end") // text-align: right
 					.text(String);
@@ -1045,7 +1048,7 @@ define([
 					.attr("class", "eq")
 					.attr("x", 0)
 					.attr("dx", 3) // padding-left
-					.attr("y", function(d, i) { return i * (height / data.length) + (height / data.length / 2); } )
+					.attr("y", function (d, i) { return i * (height / data.length) + (height / data.length / 2); } )
 					.attr("dy", ".35em") // vertical-align: middle
 					.attr("text-anchor", "start") // text-align: right
 					.text(String);
@@ -1113,11 +1116,11 @@ define([
 				var expected_start = 0.15 * height,
 					expected_height = 0.70 * height,
 					expected_heights = [],
-					expected_sum = _.reduce(expected_data_labels[0], function (mem, v) {
+					expected_sum = und.reduce(expected_data_labels[0], function (mem, v) {
 						return mem + v;
 					});
 
-				_.each(expected_data_labels[0], function (v) {
+				und.each(expected_data_labels[0], function (v) {
 					expected_heights.push( expected_sum ? (v / expected_sum) * expected_height : 0);
 				});
 
@@ -1125,7 +1128,7 @@ define([
 					.data(expected_data_labels[0])
 					.transition()
 					.attr("y", function (v, i) {
-						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+						return expected_start + und.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
 					})
 					.attr("height", function (v, i) { return expected_heights[i]; });
 
@@ -1133,7 +1136,7 @@ define([
 					.data(expected_data_labels[1])
 					.transition()
 					.attr("y", function (v, i) {
-						return expected_start + _.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
+						return expected_start + und.reduce(expected_heights.slice(0, i), function (mem, v) { return mem + v; }, 0);
 					});
 
 				chart.selectAll(".circle-posterior")
