@@ -4,6 +4,7 @@ requirejs.config({
         app: '../app'
     }
 });
+
 require(["jquery", "app/bayes"], function($, bayes) {
     $(function() {
         $('.bayes-calc').each(function () {

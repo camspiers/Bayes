@@ -4,10 +4,10 @@ define([
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
 	"text!./css/bayes.css",
-	"../scripts/lib/modernizr-custom.js",
-	"../scripts/lib/jquery.tools.min.js",
-	"../scripts/lib/html5slider.js",
-	"../scripts/lib/d3.v2.min.js"
+	"modernizr-custom.js",
+	"jquery.tools.min.js",
+	"html5slider.js",
+	"d3.v2.min.js"
 ], function ($, und, bayes, hypothesis, style) {
 
 	return function () {
