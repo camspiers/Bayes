@@ -28,7 +28,9 @@ define([
 				dp: 2,
 				equation: true,
 				css: {
-					"display": "none"
+					"display": "none",
+					"font-size": "14px",
+					"color": "#222" 
 				},
 				graph: false,
 				styleSelector: "bayes-calc-styles"
@@ -103,28 +105,38 @@ define([
 
 						self.config.el.css(self.config.css);
 
-						if (!Modernizr.inputtypes.range && !$.browser.mozilla) {
+						self.config.el.show().html('Bayes calculator loading...');
 
-							self.config.el.addClass('no-range');
+						self.js('MathJax', '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function () {
 
-						}
+							if (!Modernizr.inputtypes.range && !$.browser.mozilla) {
 
-						self.config.el.html(self.template('bayes'));
+								self.config.el.addClass('no-range');
 
-						if (self.config.graph) {
+							}
 
-							self.graph();
+							self.config.el.hide().html(self.template('bayes'));
 
-						}
+							if (self.config.graph) {
 
-						//Attach events
-						self.events();
+								self.graph();
 
-						//If mathjax doesn't load then neither does the calc
-						MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
-							MathJax.Hub.Config({displayAlign: "left"});
-							MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
-							MathJax.Hub.Queue(["fadeIn", self.config.el]);
+							}
+
+							//Attach events
+							self.events();
+
+							//If mathjax doesn't load then neither does the calc
+							MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
+								MathJax.Hub.Config({displayAlign: "left"});
+								MathJax.Hub.Queue(["Typeset", MathJax.Hub, self.config.el.get(0)]);
+								MathJax.Hub.Queue(["fadeIn", self.config.el]);
+							});
+
+						}, function () {
+
+							self.config.el.html('Bayes calculator failed to load');
+
 						});
 
 					}
@@ -1203,6 +1215,35 @@ define([
 				}
 				
 				document.getElementsByTagName("head")[0].appendChild( style );
+
+			},
+
+			js: function( id, url, cb, er ) {
+
+				var el = $('#' + id),
+				first_script = document.getElementsByTagName('script')[0],
+				timeout,
+				inserted = true;
+
+				if (!el.length) {
+					el = document.createElement('script');
+					el.src = url;
+					el.id = id;
+					inserted = false;
+				}
+
+				if ( er ) timeout = setTimeout(function() { er( url ); }, 2000 );
+
+				if ( cb || er ) $(el).load(function (e) {
+					if ( er ) clearTimeout( timeout );
+					if ( cb ) cb( url );
+				});
+
+				if (!inserted) {
+
+					first_script.parentNode.insertBefore( el, first_script );
+
+				}
 
 			}
 
