@@ -58,7 +58,4 @@ To see a demo of the following examples, visit [the demo page](http://camspiers.
 ##Building the project
 
 ###Almond build
-	node ../r.js -o name=almond.js include=main out=bayes-calc-so.js baseUrl=.
-
-###Standard require js build
-	node ../r.js -o name=main out=bayes-calc.js baseUrl=.
+	node r.js -o app.build.js
