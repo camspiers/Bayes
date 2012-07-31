@@ -108,7 +108,7 @@ define([
 
 						self.js('MathJax', '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function () {
 
-							if (!Modernizr.inputtypes.range && !$.browser.mozilla) {
+							if (!self.range_test()) {
 
 								self.config.el.addClass('no-range');
 
@@ -1199,6 +1199,18 @@ define([
 					.text(String);
 
 			},
+            
+            range_test: function () {
+                
+                var test = document.createElement('input');
+                try {
+                  test.type = 'range';
+                  return test.type == 'range' || (document.mozSetImageElement && ('MozAppearance' in test.style));
+                } catch (e) {
+                  return false;
+                }
+                
+            },
 
 			css: function (css) {
 
