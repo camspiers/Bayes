@@ -4,9 +4,9 @@ define([
 	"text!./templates/bayes.html",
 	"text!./templates/hypothesis.html",
 	"text!./css/bayes.css",
-	"scripts/lib/jquery.tools.min.js",
-	"scripts/lib/html5slider.js",
-	"scripts/lib/d3.v2.min.js"
+	"jquery.tools",
+	"html5slider",
+	"d3"
 ], function ($, und, bayes, hypothesis, style) {
 
 	return function () {
