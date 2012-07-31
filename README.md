@@ -8,10 +8,9 @@ Also a special thanks to [Richard Carrier](http://www.richardcarrier.info/) for 
 
 ##Configuration
 
-To include any of the following calculators on your page, first you must include these script tags in the head of your document:
+To include any of the following calculators on your page, first you must include this script tag in the head of your document:
 
-	<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-	<script src="http://camspiers.github.com/Bayes/javascripts/bayes-calc-so.js" charset="utf-8"></script>
+	<script src="http://camspiers.github.com/Bayes/javascripts/bayes-calc-so.v1.1.js" charset="utf-8"></script>
 
 Once these are included on the page, adding a calculator is as easy as adding a small html snippet into the desired location on your page.
 
