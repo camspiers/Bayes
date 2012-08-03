@@ -110,9 +110,7 @@ define([
 
                             self.config.el.show().html('Bayes calculator loading...');
 
-//                            self.load_mathjax();
-
-                            self.load_js('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function () {
+                            self.load_js('http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function () {
 
                                 if (!self.range_test()) {
 
