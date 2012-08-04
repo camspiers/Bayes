@@ -8,8 +8,8 @@
 define([
     "jquery",
     "underscore",
-    "text!./templates/bayes.html",
-    "text!./templates/hypothesis.html",
+    "tpl!./templates/bayes.html",
+    "tpl!./templates/hypothesis.html",
     "text!./css/bayes.css",
     "jquery.tools",
     "html5slider",
@@ -29,8 +29,8 @@ define([
                 selector: false,
                 el: false,
                 templates: {
-                    bayes: und.template(bayes),
-                    hypothesis: und.template(hypothesis)
+                    bayes: bayes,
+                    hypothesis: hypothesis
                 },
                 afortiori: false,
                 num: 1,
