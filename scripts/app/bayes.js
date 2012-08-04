@@ -1,3 +1,9 @@
+/*
+ * Bayes Calculator
+ * by Cam Spiers
+ * MIT http://camspiers.mit-license.org/
+ */
+
 /*global define: false, MathJax: false */
 define([
     "jquery",
