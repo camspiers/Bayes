@@ -17,6 +17,7 @@ require.config({
         underscore: "scripts/lib/underscore",
         jquery: "scripts/lib/jquery",
         text: "scripts/lib/text",
+        tpl: "scripts/lib/tpl",
         'jquery.tools': 'scripts/lib/jquery.tools.min',
         html5slider: 'scripts/lib/html5slider',
         d3: 'scripts/lib/d3.v2'
